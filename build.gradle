@@ -47,3 +47,8 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:8.2.0'
 
 }
+
+wrapper {
+    gradleVersion = "7.3.3"
+    distributionType = Wrapper.DistributionType.ALL
+}
