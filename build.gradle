@@ -71,8 +71,8 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId = 'com.chesterlk.ftc'
-            artifactId = 'TweetyBird'
-            version = '1.2.2'
+            artifactId = 'tweetybird'
+            version = '1.2.3'
         }
     }
 }

@@ -1,6 +1,6 @@
-package com.chesterlk.ftc.TweetyBird.core;
+package com.chesterlk.ftc.tweetybird.core;
 
-import com.chesterlk.ftc.TweetyBird.util.TB_Waypoint;
+import com.chesterlk.ftc.tweetybird.util.TB_Waypoint;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,6 @@
-package com.chesterlk.ftc.TweetyBird.core;
+package com.chesterlk.ftc.tweetybird.core;
 
-import com.chesterlk.ftc.TweetyBird.util.TB_Config;
+import com.chesterlk.ftc.tweetybird.util.TB_Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class TB_Odometer extends Thread {

@@ -1,4 +1,4 @@
-package com.chesterlk.ftc.TweetyBird.util;
+package com.chesterlk.ftc.tweetybird.util;
 
 public class TB_Config {
     //Physical Robot Measurements
