@@ -63,8 +63,8 @@ publishing {
             name = "GitHubPackages"
             url = "https://maven.pkg.github.com/itschesterlk/TweetyBird"
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+                username = project.findProperty("gpr.user") ?: "itschesterlk"
+                password = project.findProperty("gpr.key") ?: "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"
             }
         }
     }

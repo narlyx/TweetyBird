@@ -1,6 +1,4 @@
-package com.chesterlk.ftc.tweetybird.core;
-
-import com.chesterlk.ftc.tweetybird.util.TB_Waypoint;
+package com.chesterlk.ftc.tweetybird;
 
 public class TB_ThreadManager extends Thread {
     //States

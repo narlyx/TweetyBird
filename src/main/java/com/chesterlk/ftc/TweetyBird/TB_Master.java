@@ -1,7 +1,5 @@
-package com.chesterlk.ftc.tweetybird.core;
+package com.chesterlk.ftc.tweetybird;
 
-import com.chesterlk.ftc.tweetybird.util.TB_DrivetrainHwmap;
-import com.chesterlk.ftc.tweetybird.util.TB_Waypoint;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 

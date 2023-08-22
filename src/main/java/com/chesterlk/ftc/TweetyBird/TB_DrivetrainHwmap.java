@@ -1,4 +1,4 @@
-package com.chesterlk.ftc.tweetybird.util;
+package com.chesterlk.ftc.tweetybird;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;

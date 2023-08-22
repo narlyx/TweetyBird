@@ -1,8 +1,7 @@
-package com.chesterlk.ftc.tweetybird.core;
+package com.chesterlk.ftc.tweetybird;
 
 import static java.lang.Double.isNaN;
 
-import com.chesterlk.ftc.tweetybird.util.TB_Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
