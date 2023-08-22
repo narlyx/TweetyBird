@@ -9,6 +9,7 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     namespace 'com.chesterlk.tweetybird'
@@ -57,42 +58,21 @@ dependencies {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-
-            groupId = 'com.chesterlk.tweetybird' // Change to your desired groupId
-            artifactId = 'tweetybird' // Change to your desired artifactId
-            version = '1.1.8' // Change to your desired version
-
-            pom {
-                name = 'TweetyBird'
-                description = 'Meccanum Wheeled Drivetrain Controller for FTC'
-                url = 'https://github.com/itschesterlk/TweetyBird' // Change to your repository URL
-
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-            }
-        }
-    }
-
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/itschesterlk/TweetyBird")
+            url = "https://maven.pkg.github.com/itschesterlk/TweetyBird"
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
-}
-
-wrapper {
-    gradleVersion = "7.5"
-    distributionType = Wrapper.DistributionType.ALL
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'com.chesterlk.tweetybird'
+            artifactId = 'tweetybird'
+            version = '1.1.8'
+        }
+    }
 }
