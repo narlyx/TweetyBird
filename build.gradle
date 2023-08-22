@@ -63,15 +63,15 @@ publishing {
             name = "GitHubPackages"
             url = "https://maven.pkg.github.com/itschesterlk/TweetyBird"
             credentials {
-                username = ${{ github.actor }}
-                password = ${{ secrets.PACKAGE_TOKEN }}
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
             }
         }
     }
     publications {
         mavenJava(MavenPublication) {
             groupId = 'com.chesterlk.tweetybird'
-            artifactId = 'tweetybird'
+            artifactId = 'core'
             version = '1.1.11'
         }
     }
