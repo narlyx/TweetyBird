@@ -69,6 +69,14 @@ public class TB_Master extends TB_Mover {
         }
     }
 
+    public void enguage() {
+        TB_Mover.engaged = true;
+    }
+
+    public void disenguage() {
+        TB_Mover.engaged = false;
+    }
+
     public double getX() {
         return classes.odometer.X;
     }
