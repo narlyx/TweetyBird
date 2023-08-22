@@ -60,7 +60,7 @@ dependencies {
 publishing {
     repositories {
         maven {
-            name = "TweetyBird Package"
+            name = "TweetyBird"
             url = "https://maven.pkg.github.com/itschesterlk/TweetyBird"
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
