@@ -12,7 +12,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 android {
-    namespace 'com.chesterlk.tweetybird'
+    namespace 'com.chesterlk.ftc'
     compileSdk 33
 
     defaultConfig {
@@ -60,7 +60,7 @@ dependencies {
 publishing {
     repositories {
         maven {
-            name = "GitHubPackages"
+            name = "TweetyBird Package"
             url = "https://maven.pkg.github.com/itschesterlk/TweetyBird"
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
@@ -70,9 +70,9 @@ publishing {
     }
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'com.chesterlk.tweetybird'
-            artifactId = 'core'
-            version = '1.1.12'
+            groupId = 'com.chesterlk.ftc'
+            artifactId = 'TweetyBird'
+            version = '1.2.0'
         }
     }
 }
