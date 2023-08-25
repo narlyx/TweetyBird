@@ -5,6 +5,8 @@ import static java.lang.Double.isNaN;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.opencv.core.Mat;
+
 public class TB_Mover extends Thread {
 
     //States
@@ -56,9 +58,6 @@ public class TB_Mover extends Thread {
                 TB_Mover.busy = false;
             }
 
-            TB_Master.opMode.telemetry.addLine(dataToString());
-            TB_Master.opMode.telemetry.update();
-
             //Getting next waypoint if needed and setting waypoint values
             if (cycleCondition()) {
                 cycleWaypoint();
@@ -71,7 +70,7 @@ public class TB_Mover extends Thread {
 
     //Conditions
     private boolean cycleCondition() { //Returns weather or not the robot needs to continue to the next waypoint
-        return TB_Master.classes.queue.getDistanceToCurrent()<1&driveCondition()&rotateCondition();
+        return TB_Master.classes.queue.getDistanceToCurrent()<5&driveCondition()&rotateCondition();
     }
 
     private boolean moveCondition() { //Determines weather the robot should move
@@ -79,7 +78,7 @@ public class TB_Mover extends Thread {
     }
 
     private boolean driveCondition() {
-        return distanceForm(TB_Mover.targetX,TB_Mover.targetY, TB_Master.classes.odometer.X,TB_Master.classes.odometer.Y)<=0.5;
+        return distanceForm(TB_Mover.targetX,TB_Mover.targetY, TB_Master.classes.odometer.X,TB_Master.classes.odometer.Y)<=0.6;
     }
 
     private boolean rotateCondition() {
@@ -103,7 +102,6 @@ public class TB_Mover extends Thread {
         setTarget(TB_Master.classes.queue.current().getX(),TB_Master.classes.queue.current().getY(),TB_Master.classes.queue.current().getZ());
         setNext(TB_Master.classes.queue.next().getX(),TB_Master.classes.queue.next().getY(),TB_Master.classes.queue.next().getZ());
         updateProjection();
-        updateNextAngle();
     }
 
     private void updateCoreValues() { //Updates the values needed during every loop
@@ -114,6 +112,7 @@ public class TB_Mover extends Thread {
         updateSpeed();
         updateTargetYaw();
         updateYawPower();
+        updateNextAngle();
     }
 
 
@@ -137,14 +136,14 @@ public class TB_Mover extends Thread {
     }
 
     private void updateNextAngle() {
-        double a = distanceForm(targetX,targetY,nextX,nextY);
-        double b = distanceForm(lastX,lastY,targetX,targetY);
-        double c = distanceForm(lastX,lastY,nextX,nextY)+0.0001;
+        double a = Math.abs(distanceForm(targetX,targetY,nextX,nextY));
+        double b = Math.abs(distanceForm(lastX,lastY,targetX,targetY));
+        double c = Math.abs(distanceForm(lastX,lastY,nextX,nextY)-0.0001);
 
-        TB_Mover.nextAngle = Math.toRadians(Math.acos((Math.pow(a,2)+Math.pow(b,1)-Math.pow(c,1))/(2*a*b)));
+        TB_Mover.nextAngle = Math.acos( (a*a+b*b-c*c) / (2.0*a*b) );
 
         if(isNaN(TB_Mover.nextAngle)) {
-            TB_Mover.nextAngle = 0;
+            TB_Mover.nextAngle = Math.toRadians(1);
         }
     }
 
@@ -184,12 +183,12 @@ public class TB_Mover extends Thread {
         double deccel = Range.clip(TB_Master.classes.queue.getDistanceToEnd()*TB_Config.speedModifier,TB_Config.minSpeed,TB_Config.maxSpeed);
 
         double rotationModifier = Math.abs(TB_Mover.nextAngle-Math.PI)*(Math.PI*0.1);
-        double caution = Range.clip(((12-TB_Master.classes.queue.getDistanceToCurrent())*TB_Config.speedModifier)*rotationModifier,0,TB_Config.maxSpeed-TB_Config.minSpeed);
+        double caution = Range.clip(((12-TB_Master.classes.queue.getDistanceToCurrent())*TB_Config.speedModifier)*rotationModifier,0,TB_Config.maxSpeed-TB_Config.startBoostSpeed);
 
         double accel = Range.clip(deccel-(TB_Master.classes.queue.getDistanceFromStart()*TB_Config.speedModifier)-TB_Config.startBoostSpeed,0,(TB_Config.maxSpeed-TB_Config.minSpeed));
 
         //Currently caution is removed "cel)-caution, TB_"
-        TB_Mover.speed = Range.clip((deccel-accel),TB_Config.minSpeed,TB_Config.maxSpeed);
+        TB_Mover.speed = Range.clip((deccel-accel)-caution,TB_Config.minSpeed,TB_Config.maxSpeed);
     }
 
     private void updateTargetYaw() {

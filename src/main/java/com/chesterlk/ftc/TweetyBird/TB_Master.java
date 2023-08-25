@@ -54,6 +54,7 @@ public class TB_Master extends TB_Mover {
     }
 
     public void waitWhileBusy() {
+        opMode.sleep(500);
         while (opMode.opModeIsActive()&&isBusy()) {
             opMode.sleep(0);
         }

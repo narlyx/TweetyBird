@@ -16,11 +16,11 @@ public class TB_Config {
 
 
     //TB_Mover
-    public static final double minSpeed = 0.12;
-    public static final double maxSpeed = 0.3;
+    public static final double minSpeed = 0.13;
+    public static final double maxSpeed = 0.5;
     public static final double startBoostSpeed = 0.17; //Similar to min speed but only used to launch the robot from a stop.
 
-    public static final double speedModifier = 0.05; //If your robot is launching too fast, decrease, if it is launching too slow, increase, only change by 0.01 (sensitive)
+    public static final double speedModifier = 0.06; //If your robot is launching too fast, decrease, if it is launching too slow, increase, only change by 0.01 (sensitive)
 
     public static final double stopForceSpeed = 0.1; //When your robot is at a stand still, how much power will be applied to keep robot in place, (too high results in skidding)
     public static final double correctionOverpowerDistance = 5; //How far the robot needs to be off course before it forgets the target and fixes itself (in inches)

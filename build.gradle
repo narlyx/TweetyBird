@@ -41,6 +41,7 @@ repositories {
 }
 
 dependencies {
+    
     implementation 'org.firstinspires.ftc:Inspection:8.2.0'
     implementation 'org.firstinspires.ftc:Blocks:8.2.0'
     implementation 'org.firstinspires.ftc:Tfod:8.2.0'
@@ -63,8 +64,8 @@ publishing {
             name = "GitHubPackages"
             url = "https://maven.pkg.github.com/itschesterlk/TweetyBird"
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+                username = project.findProperty("gpr.user") ?: "itschesterlk"
+                password = project.findProperty("gpr.key") ?: "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"
             }
         }
     }
@@ -72,7 +73,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = 'com.chesterlk.ftc'
             artifactId = 'tweetybird'
-            version = '1.2.4'
+            version = '1.2.4-test1'
         }
     }
 }
