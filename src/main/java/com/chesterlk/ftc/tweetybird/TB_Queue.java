@@ -8,16 +8,16 @@ public class TB_Queue {
     private ArrayList<TB_Waypoint> prevoius = new ArrayList<>();
 
     //Public Methods
-    protected void add(TB_Waypoint newAddition) {
+    protected void add(TB_Waypoint newAddition) { //Adds new waypoint to the list
         TB_Mover.busy = true;
         queue.add(newAddition);
     }
 
-    protected void silentAdd(TB_Waypoint newAddition) {
+    protected void silentAdd(TB_Waypoint newAddition) { //Adds a new waypoint to the list, but does nto start TweetyBird
         queue.add(newAddition);
     }
 
-    protected TB_Waypoint increment() {
+    protected TB_Waypoint increment() { //Moves current to past, then grabs the next waypoint in queue to be current
 
         if (queue.size()==1) {
             prevoius.clear();
@@ -31,11 +31,11 @@ public class TB_Queue {
         return current();
     }
 
-    protected TB_Waypoint current() {
+    protected TB_Waypoint current() { //Returns current waypoint
         return queue.get(0);
     }
 
-    protected TB_Waypoint next() {
+    protected TB_Waypoint next() { //Returns next waypoint
         if (queue.size()==1) {
             return new TB_Waypoint(current().getX(), current().getY(), current().getZ());
         }
@@ -43,23 +43,23 @@ public class TB_Queue {
         return queue.get(1);
     }
 
-    protected TB_Waypoint last() {
+    protected TB_Waypoint last() { //Returns last waypoint
         if (prevoius.size()==0) {
             return new TB_Waypoint(TB_Master.classes.odometer.X,TB_Master.classes.odometer.Y,TB_Master.classes.odometer.Z);
         }
         return prevoius.get(0);
     }
 
-    protected void clear() {
+    protected void clear() { //Clears waypoint list TODO: Currently does not integrate well with TB_Mover
         queue.clear();
         prevoius.clear();
     }
 
-    protected double getDistanceToCurrent() {
+    protected double getDistanceToCurrent() { //Returns distance between robot to the current waypoint
         return distanceForm(TB_Master.classes.odometer.X,TB_Master.classes.odometer.Y,current().getX(),current().getY());
     }
 
-    protected double getDistanceToEnd() {
+    protected double getDistanceToEnd() { //Returns currentDistance + the distance between each waypoint until the end
         double distance = getDistanceToCurrent();
         for (int i = 1; i<queue.size(); i++) {
             distance+=distanceForm(queue.get(i-1).getX(),queue.get(i-1).getY(),queue.get(i).getX(),queue.get(i).getY());
@@ -67,7 +67,7 @@ public class TB_Queue {
         return distance;
     }
 
-    protected double getDistanceFromStart() {
+    protected double getDistanceFromStart() { //Returns all of the previous waypoints
         double distance = distanceForm(last().getX(), last().getY(), TB_Master.classes.odometer.X,TB_Master.classes.odometer.Y);
         for (int i = 1; i<prevoius.size(); i++) {
             distance+=distanceForm(prevoius.get(i-1).getX(),prevoius.get(i-1).getY(),prevoius.get(i).getX(),prevoius.get(i).getY());
@@ -75,7 +75,7 @@ public class TB_Queue {
         return distance;
     }
 
-    private static double distanceForm(double x1, double y1, double x2, double y2) {
+    private static double distanceForm(double x1, double y1, double x2, double y2) { //Function to clean up code (distance formula)
         return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
     }
 }
