@@ -18,7 +18,7 @@ public class TB_Mover extends Thread {
     lastX=0.0001, lastY=0.0001, lastZ=0,
     targetX =0, targetY =0, targetZ =0,
     nextX =0, nextY =0, nextZ =0,
-    projectionSlope=0, projectionIntersect=0, projectionHeading=0, //<< No it may not be final
+    projectionSlope=0, projectionIntersect=0, projectionHeading=0,
     bisectorSlope=0, bisectorIntersect=0, bisectionX=0, bisectionY=0,
     targetHeading=0,
     correctionHeading=0, correctionPower=0,
@@ -26,7 +26,6 @@ public class TB_Mover extends Thread {
     speed=0,
     targetYaw=0,yawPower=0,yawOff=0,
     nextAngle=0
-
         ;
 
 
@@ -45,15 +44,15 @@ public class TB_Mover extends Thread {
             }
 
             //Action
-            if (moveCondition()) { //Move Robo
+            if (moveCondition()) { //Move Robot
                 smartMove();
                 TB_Mover.busy = true;
 
-            } else if (lockCondition()) { //Lock Robo
+            } else if (lockCondition()) { //Lock Robot
                 lockDrivetrain();
                 TB_Mover.busy = false;
 
-            } else { //Relax Robo
+            } else { //"Relax" Robot
                 //unlockDrivetrain();
                 TB_Mover.busy = false;
             }
@@ -68,34 +67,41 @@ public class TB_Mover extends Thread {
         TB_Master.classes.readyToStop = true;
     }
 
-    //Conditions
-    private boolean cycleCondition() { //Returns weather or not the robot needs to continue to the next waypoint
+
+
+
+
+    //Class Conditions
+    private boolean cycleCondition() { //True if TweetyBird can continue
         return TB_Master.classes.queue.getDistanceToCurrent()<5&driveCondition()&rotateCondition();
     }
 
-    private boolean moveCondition() { //Determines weather the robot should move
+    private boolean moveCondition() { //True if the robot is allowed to move
         return TB_Mover.engaged&!lockCondition();
     }
 
-    private boolean driveCondition() {
+    private boolean driveCondition() { //True if the robot's x and y pos is correct
         return distanceForm(TB_Mover.targetX,TB_Mover.targetY, TB_Master.classes.odometer.X,TB_Master.classes.odometer.Y)<=0.6;
     }
 
-    private boolean rotateCondition() {
+    private boolean rotateCondition() { //True is the robot's z pos is correct
         return yawOff<0.08;
     }
 
-    private boolean lockCondition() { //Determines if the robot is in the correct spot
+    private boolean lockCondition() { //True if the robot is in the correct spot
         return TB_Mover.engaged&driveCondition()&rotateCondition();
     }
 
-    private boolean updateCondition() {
+    private boolean updateCondition() { //True if TweetyBird is ready
         return TB_Mover.busy;
     }
 
 
 
-    //Bulk Update
+
+
+
+    //Bulk Update Data
     private void cycleWaypoint() { //Cycles values to allow the robot to continue
         TB_Master.classes.queue.increment();
         setLast(TB_Master.classes.queue.last().getX(),TB_Master.classes.queue.last().getY(),TB_Master.classes.queue.last().getZ());
@@ -116,7 +122,9 @@ public class TB_Mover extends Thread {
     }
 
 
-    //Update Data
+
+
+    //Update Individual Sections Data
     private void setLast(double x, double y, double z) { //Last Waypoint
         TB_Mover.lastX = x;
         TB_Mover.lastY = y;
@@ -211,7 +219,21 @@ public class TB_Mover extends Thread {
         return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
     }
 
-    protected String dataToString() {
+    protected void clearAll() {
+
+        TB_Mover.lastX=0.0001; TB_Mover.lastY=0.0001; TB_Mover.lastZ=0;
+        TB_Mover.targetX =0; TB_Mover.targetY =0; TB_Mover.targetZ =0;
+        TB_Mover.projectionSlope=0; TB_Mover.projectionIntersect=0; TB_Mover.projectionHeading=0;
+        TB_Mover.bisectorSlope=0; TB_Mover.bisectorIntersect=0; TB_Mover.bisectionX=0; TB_Mover.bisectionY=0;
+        TB_Mover.targetHeading=0;
+        TB_Mover.correctionHeading=0; TB_Mover.correctionPower=0;
+        TB_Mover.finalHeading=0; TB_Mover.axial=0; TB_Mover.lateral=0;
+        TB_Mover.speed=0;
+        TB_Mover.targetYaw=0; TB_Mover.yawPower=0; TB_Mover.yawOff=0;
+    }
+
+
+    protected String dataToString() { //Returns a string of telemetry TODO: Make this... Nicer and easier to work with
         return ("Speed ="+TB_Mover.speed+"\n" +
                 "LastX ="+TB_Mover.lastX+" LastY ="+TB_Mover.lastY+" LastZ ="+TB_Mover.lastZ+"\n" +
                 "NextX ="+TB_Mover.targetX +" NextY"+TB_Mover.targetY +" NextZ ="+TB_Mover.targetZ +"\n" +
@@ -229,22 +251,8 @@ public class TB_Mover extends Thread {
                 "LockCondition ="+lockCondition();
     }
 
-    protected void clearAll() {
 
-        TB_Mover.lastX=0.0001; TB_Mover.lastY=0.0001; TB_Mover.lastZ=0;
-        TB_Mover.targetX =0; TB_Mover.targetY =0; TB_Mover.targetZ =0;
-        TB_Mover.projectionSlope=0; TB_Mover.projectionIntersect=0; TB_Mover.projectionHeading=0;
-        TB_Mover.bisectorSlope=0; TB_Mover.bisectorIntersect=0; TB_Mover.bisectionX=0; TB_Mover.bisectionY=0;
-        TB_Mover.targetHeading=0;
-        TB_Mover.correctionHeading=0; TB_Mover.correctionPower=0;
-        TB_Mover.finalHeading=0; TB_Mover.axial=0; TB_Mover.lateral=0;
-        TB_Mover.speed=0;
-        TB_Mover.targetYaw=0; TB_Mover.yawPower=0; TB_Mover.yawOff=0;
-    }
-
-
-
-    protected void smartMove() {
+    protected void smartMove() { //Will only move certain areas based on data
         double tempAxial = TB_Mover.axial;
         double tempLateral = TB_Mover.lateral;
         double tempYaw = TB_Mover.yawPower;
