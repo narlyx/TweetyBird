@@ -2,7 +2,14 @@ package com.chesterlk.ftc.tweetybird;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class TB_Odometer extends Thread {
+public class Odometer extends Thread {
+
+    //Processor
+    private TweetyBirdProcessor processor;
+
+    //Status
+    protected boolean running = false;
+    private boolean stopRequested = false;
 
     //Positions (These are stored in the original class, not the thread)
     protected double X = 0;
@@ -10,42 +17,61 @@ public class TB_Odometer extends Thread {
     protected double Z = 0;
 
     //Storing variables here for quicker access (These do not need to be static because the class is copied with thread)
-    final double Lx = TB_Config.radiusToLeftEncoder;
-    final double Rx = TB_Config.radiusToRightEncoder+0.0001;
-    final double By = TB_Config.radiusToBackEncoder;
-    final double ticksPerInch = TB_Config.ticksPerInch;
+    double Lx;
+    double Rx;
+    double By;
+    double ticksPerInch;
+
+    public Odometer(TweetyBirdProcessor processor) {
+        //Status
+        running = false;
+        stopRequested = false;
+
+        //Setting Processor
+        this.processor = processor;
+    }
 
     //The thread (When the thread is ran a duplicate is created, so to make things simple, the thread will reference this original class)
     @Override
     public void run() {
-        //Clearing Values
+        //Setting
         X = 0;
         Y = 0;
         Z = 0;
 
+        Lx = processor.radiusToLeftEncoder;
+        Rx = processor.radiusToRightEncoder+0.0001;
+        By = processor.radiusToBackEncoder;
+        ticksPerInch = processor.ticksPerInch;
+
+        //Updating status
+        stopRequested = false;
+        this.running = true;
+
         //Waiting for Start
-        TB_Master.opMode.waitForStart();
+        processor.opMode.waitForStart();
 
         //Resting Encoder Positions
-        TB_Master.drivetrain.leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        TB_Master.drivetrain.rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        TB_Master.drivetrain.backEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        processor.le.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        processor.re.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        processor.be.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Re-enabling Motors since they are linked to the actual motors
-        TB_Master.drivetrain.leftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        TB_Master.drivetrain.rightEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        TB_Master.drivetrain.backEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        processor.le.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        processor.re.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        processor.be.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Storage
         int[] prevEncoderPos = {0,0,0}; //Used to see how far the robot moved
 
         //Loop until robot is stopped
-        while (TB_Master.opMode.opModeIsActive()) {
+
+        while (processor.opMode.opModeIsActive()||!stopRequested) {
 
             //Getting Encoder Positions
-            int[] rawEncoderPos = {TB_Master.drivetrain.leftEncoder.getCurrentPosition(),
-                    TB_Master.drivetrain.rightEncoder.getCurrentPosition(),
-                    TB_Master.drivetrain.backEncoder.getCurrentPosition()};
+            int[] rawEncoderPos = {processor.le.getCurrentPosition(),
+                    processor.re.getCurrentPosition(),
+                    processor.be.getCurrentPosition()};
 
             //Getting the Amount Each Encoder Moved Since the Last Cycle
             int[] movedPositions = {rawEncoderPos[0]-prevEncoderPos[0],
@@ -79,10 +105,9 @@ public class TB_Odometer extends Thread {
         }
     }
 
-    protected String dataToString() {
-        return ("X ="+X+"\n" +
-                "Y ="+Y+"\n" +
-                "Z ="+Z);
+    //Stop
+    protected void requestStop() {
+        stopRequested = true;
     }
 
 }
