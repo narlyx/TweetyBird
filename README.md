@@ -102,7 +102,7 @@ Also, contributions of any kind are extreemly helpful. If you improve or fix any
 	Each parameter has inline javadocs to guide you when setting up the parameters. And eventually a wiki/documentation page will be set up for TweetyBird.<br><br>
 4. You are ready to use TweetyBird now, if you encounter the robot restarting without any error after installing TweetyBird, check to insure that the DC Motor instances exist and are initialized
 
-# Useage
+# Usage
 Now its time for the easy part, using TweetyBird. If your robot does some odd movements, check that your encoder wheels are making proper contact with the ground and your build parameters are accuate. If you are certian that it is not your falt, submit an issue to the GitHub page if noone else has, and we will get working on finding a fix or helping you.
 
 By typing the variable name you assigned earlier followed by a dot, most IDE's will list the commands that you can use. Currently we do not have a wiki nor documentation so you will need to dig through the TweetyBirdProcessor file if you cannot see the autocompletion for commands in your ide. However for the time being, a few are listed below.
