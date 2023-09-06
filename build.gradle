@@ -54,7 +54,7 @@ publishing {
             url = "https://maven.pkg.github.com/itschesterlk/TweetyBird"
             credentials {
                 username = project.findProperty("gpr.user") ?: "itschesterlk"
-                password = project.findProperty("gpr.key") ?: "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"
+                password = project.findProperty("gpr.key") ?: "Stoppppp"
             }
         }
     }
@@ -62,7 +62,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = 'com.chesterlk.ftc'
             artifactId = 'tweetybird'
-            version = '1.2.4-test1'
+            version = '1.2.1'
         }
     }
 }

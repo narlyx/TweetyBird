@@ -37,7 +37,7 @@ Also, contributions of any kind are extreemly helpful. If you improve or fix any
 *Coming Soon, will include a 3 line install and auto updates!*
 
 ### Manual Method
-1. Download the latest release of TweetyBird's source code from <a href="https://google.com/">here!</a>, or if you are feeling a little risky and want to be on the bleeding edge, you can download the latest commit.<br><br>
+1. Download the latest release of TweetyBird's source code from <a href="https://github.com/itschesterlk/TweetyBird/releases">here!</a>, or if you are feeling a little risky and want to be on the bleeding edge, you can download the latest commit.<br><br>
 2. Unzip the source code file and place the extracted file in your FTC Android SDK, this guide will use the root folder of the SDK. Also, keep note of the extracted file's name, you will need it later.<br><br>
 3. Open your TeamCode build.gradle file (/TeamCode/build.gradle) and add the following line to the dependancies block: ```implementation project(path: ':TweetyBirdFileNameHere')``` . TweetyBirdFileNameHere should be replaced with your filename, if you did not modify it, it should go something along the lines of TweetyBird-x.x.x, where the x's represent the release number. (Android studio will autocomplete it for you most of the time)<br><br>
 4. You are done! Give yourself a pat on the back for just how incredibly duificut that installation was!<br><br>
