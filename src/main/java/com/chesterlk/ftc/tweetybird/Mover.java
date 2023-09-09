@@ -99,7 +99,7 @@ public class Mover extends Thread {
 
     //Class Conditions
     private boolean cycleCondition() { //True if TweetyBird can continue
-        return processor.queue.getDistanceToCurrent()<5&driveCondition()&rotateCondition();
+        return processor.queue.getDistanceToCurrent()<3&driveCondition()&rotateCondition();
     }
 
     private boolean moveCondition() { //True if the robot is allowed to move
