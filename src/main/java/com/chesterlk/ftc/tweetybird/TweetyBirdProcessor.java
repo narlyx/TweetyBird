@@ -195,6 +195,27 @@ public class TweetyBirdProcessor {
     }
 
     /**
+     * @return X Position
+     */
+    public double getX() {
+        return odometer.X;
+    }
+
+    /**
+     * @return Y Position
+     */
+    public double getY() {
+        return odometer.Y;
+    }
+
+    /**
+     * @return Z Position
+     */
+    public double getZ() {
+        return odometer.Z;
+    }
+
+    /**
      * Stop Classes
      */
     public void stop() {
