@@ -72,7 +72,7 @@ public class Mover extends Thread {
                 busy = false;
 
             } else { //"Relax" Robot
-                unlockDrivetrain();
+                //unlockDrivetrain();
                 busy = false;
             }
 
