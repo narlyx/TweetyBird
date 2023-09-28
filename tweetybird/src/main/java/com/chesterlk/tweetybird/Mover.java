@@ -1,4 +1,4 @@
-package com.chesterlk.ftc.tweetybird;
+package com.chesterlk.tweetybird;
 
 import static java.lang.Double.isNaN;
 

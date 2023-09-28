@@ -1,0 +1,74 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
+}
+
+apply plugin: 'maven-publish'
+
+android {
+    namespace 'com.chesterlk.tweetybird'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 33
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+publishing {
+    publications {
+        bar(MavenPublication) {
+            groupId "com.chesterlk"
+            artifactId "tweetybird"
+            version "2.1"
+            artifact("$buildDir/outputs/aar/tweetybird-release.aar")
+        }
+    }
+
+    //* Github Packages
+    repositories {
+        maven {
+            name "GithubPackages"
+            url uri("https://maven.pkg.github.com/itschesterlk/TweetyBird")
+            credentials {
+                username = System.getenv("GITHUB_USER")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    //*/
+    /* Maven Publish
+    repositories {
+        maven {
+            name "OSSRH"
+            url uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
+    */
+}
+
+dependencies {
+    implementation 'org.firstinspires.ftc:RobotCore:8.2.0'
+    implementation 'org.firstinspires.ftc:Hardware:8.2.0'
+}

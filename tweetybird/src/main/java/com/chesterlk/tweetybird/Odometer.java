@@ -1,4 +1,4 @@
-package com.chesterlk.ftc.tweetybird;
+package com.chesterlk.tweetybird;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
