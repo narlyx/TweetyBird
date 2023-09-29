@@ -37,7 +37,7 @@ publishing {
         bar(MavenPublication) {
             groupId "com.chesterlk"
             artifactId "tweetybird"
-            version "2.1.0"
+            version "2.1.1"
             artifact("$buildDir/outputs/aar/tweetybird-release.aar")
         }
     }

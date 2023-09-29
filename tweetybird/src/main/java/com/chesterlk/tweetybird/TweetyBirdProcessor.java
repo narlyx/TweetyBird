@@ -3,49 +3,122 @@ package com.chesterlk.tweetybird;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+/**
+ * The central class for TweetyBird, being responsible for initializing, starting, and stopping TweetyBird, while taking user input
+ */
 public class TweetyBirdProcessor {
 
     /**
-     * Status Classes
+     * Allows other TweetyBird threads to determine when to stop
      */
     protected boolean running = false;
 
     /**
-     * Parameters and Configuration
+     * Reference to LinearOpMode via builder
      */
     protected LinearOpMode opMode;
 
+    /**
+     * Front left motor reference via builder
+     */
     protected DcMotor fl;
+    /**
+     * Front right motor reference via builder
+     */
     protected DcMotor fr;
+    /**
+     * Back left motor reference via builder
+     */
     protected DcMotor bl;
+    /**
+     * Back right motor reference via builder
+     */
     protected DcMotor br;
+    /**
+     * Left encoder "motor" reference via builder
+     */
     protected DcMotor le;
+    /**
+     * Right encoder "motor" reference via builder
+     */
     protected DcMotor re;
+    /**
+     * Back encoder "motor" reference via builder
+     */
     protected DcMotor be;
 
+    /**
+     * Radius from center of rotation to left encoder value via builder
+     */
     protected double radiusToLeftEncoder;
+    /**
+     * Radius from center of rotation to right encoder value via builder
+     */
     protected double radiusToRightEncoder;
+    /**
+     * Radius from center of rotation to back encoder value via builder
+     */
     protected double radiusToBackEncoder;
 
+    /**
+     * Amount of ticks counted per encoder rotation (360 degrees)
+     */
     protected int ticksPerEncoderRotation;
+    /**
+     * Radius of the wheel attached to the encoder
+     */
     protected double encoderWheelRadius;
+
+    /**
+     * Calculated value for ticks per inch moved across a surface (calculated during initialization)
+     */
     protected double ticksPerInch;
 
+    /**
+     * Minimum speed via builder
+     */
     protected double minSpeed;
+    /**
+     * Maximum speed via builder
+     */
     protected double maxSpeed;
+    /**
+     * Minimum speed when starting from a standstill via builder
+     */
     protected double startSpeed;
+    /**
+     * Amount of power applied to every wheel when stopped (uses meccanum wheels to push out form the center of rotation)
+     */
     protected double stopForceSpeed;
+    /**
+     * Precise value used to modify acceleration and deceleration (eg. a value of 0.1 will result in 0.2 speed when 2 inches away from target)
+     */
     protected double speedModifier;
 
+    /**
+     * How far (in inches) the robot can be away from its path before directing all power into correcting
+     */
     protected double correctionOverpowerDistance;
+    /**
+     * Amount of degrees the robot can be offset before attempting to correct
+     */
     protected double rotationBuffer;
+    /**
+     * Amount of inches the robot can be offset before attempting to correct
+     */
     protected double distanceBuffer;
 
     /**
-     * Classes
+     * Global odometer class reference
      */
     Odometer odometer;
+    /**
+     * Global queue class reference
+     */
     Queue queue;
+    /**
+     * Global mover class reference
+     */
     Mover mover;
 
 
@@ -77,14 +150,16 @@ public class TweetyBirdProcessor {
     }
 
     /**
-     * @return true if TweetyBird is currently busy (moving)
+     * Returns weather if TweetyBird is actively trying to reach its destination, falce once TweetyBird has determined it is close enough
+     * @return boolean
      */
     public boolean busy() {
         return mover.busy;
     }
 
     /**
-     * @return true if TweetyBird is currently engaged (controlling robot)
+     * Returns weather TweetyBird is engaged or not (If TweetyBird is allowed to power the motors)
+     * @return boolean of engagement
      */
     public boolean engaged() {
         return mover.engaged;
@@ -195,28 +270,31 @@ public class TweetyBirdProcessor {
     }
 
     /**
-     * @return X Position
+     * Returns the X position relative to the point of initialization
+     * @return position
      */
     public double getX() {
         return odometer.X;
     }
 
     /**
-     * @return Y Position
+     * Returns the Y position relative to the point of initialization
+     * @return position
      */
     public double getY() {
         return odometer.Y;
     }
 
     /**
-     * @return Z Position
+     * Returns the current yaw relative to the point of initialization
+     * @return degrees
      */
     public double getZ() {
         return odometer.Z;
     }
 
     /**
-     * Stop Classes
+     * Stop all TweetyBird classes
      */
     public void stop() {
         mover.requestStop();
@@ -493,7 +571,10 @@ public class TweetyBirdProcessor {
         }
 
 
-
+        /**
+         * Starts TweetyBird with the chosen parameters
+         * @return builder instance
+         */
         public TweetyBirdProcessor build() {
             return new TweetyBirdProcessor(this);
         }
