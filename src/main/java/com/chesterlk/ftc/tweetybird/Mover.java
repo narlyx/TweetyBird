@@ -1,9 +1,13 @@
-package com.chesterlk.tweetybird;
+package com.chesterlk.ftc.tweetybird;
 
 import static java.lang.Double.isNaN;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+
+/**
+ * Mover class, responsible for controlling the drivetrain and preforming calculations
+ */
 
 public class Mover extends Thread {
 
@@ -11,9 +15,21 @@ public class Mover extends Thread {
     TweetyBirdProcessor processor;
 
     //States
+    /**
+     * Status variable determining weather the robot is busy or not
+     */
     protected boolean busy = false;
+    /**
+     * Status variable determining weather the drivetrain will be controlled or not
+     */
     protected boolean engaged = false;
+    /**
+     * Status variable used to start and stop the mover thread
+     */
     protected boolean running;
+    /**
+     * Status variable to request the mover class to stop
+     */
     private boolean stopRequested;
 
     //Data
@@ -31,7 +47,10 @@ public class Mover extends Thread {
     nextAngle=0
         ;
 
-    //Constructor
+    /**
+     * Constructor class to prepare for startus
+     * @param processor
+     */
     public Mover(TweetyBirdProcessor processor) {
         this.processor = processor;
         stopRequested = false;
@@ -52,9 +71,10 @@ public class Mover extends Thread {
         //Runtime Loop
         while (processor.opMode.opModeIsActive()||!stopRequested) {
 
+
             //Updating Values such as the position
             if (updateCondition()) {
-                updateCoreValues();
+                    updateCoreValues();
             }
 
             //Getting next waypoint if needed and setting waypoint values
@@ -81,6 +101,8 @@ public class Mover extends Thread {
                 cycleWaypoint();
             }
 
+
+
         }
         if(!stopRequested){
             processor.stop();
@@ -88,7 +110,9 @@ public class Mover extends Thread {
         running = false;
     }
 
-    //Stop
+    /**
+     * When called, the thread will terminate
+     */
     protected void requestStop() {
         stopRequested = true;
     }
@@ -128,6 +152,10 @@ public class Mover extends Thread {
 
 
     //Bulk Update Data
+
+    /**
+     * Cycles to the next waypoint in queue and prepares the mover class
+     */
     protected void cycleWaypoint() { //Cycles values to allow the robot to continue
         processor.queue.increment();
         setLast(processor.queue.last().getX(),processor.queue.last().getY(),processor.queue.last().getZ());
@@ -136,6 +164,9 @@ public class Mover extends Thread {
         updateProjection();
     }
 
+    /**
+     * Bulk updates values that must be refreshed every cycle
+     */
     private void updateCoreValues() { //Updates the values needed during every loop
         updateBisector();
         updateTarget();
@@ -245,26 +276,9 @@ public class Mover extends Thread {
         return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
     }
 
-
-    protected String dataToString() { //Returns a string of telemetry TODO: Make .. Nicer and easier to work with
-        return ("Speed ="+ speed+"\n" +
-                "LastX ="+ lastX+" LastY ="+ lastY+" LastZ ="+ lastZ+"\n" +
-                "NextX ="+ targetX +" NextY"+ targetY +" NextZ ="+ targetZ +"\n" +
-                "NextAngle ="+Math.toDegrees(nextAngle)+"\n" +
-                "ProjectionSlope ="+ projectionSlope+" ProjectionIntersect"+ projectionIntersect+" ProjectionHeading ="+ projectionHeading+"\n" +
-                "BisectorSlope ="+ bisectorSlope+" BisectorIntersect ="+ bisectorIntersect+" BisectionX ="+ bisectionX+" BisectionY ="+ bisectionY+"\n" +
-                "TargetHeading ="+Math.toDegrees(targetHeading)+"\n" +
-                "CorrectionHeading ="+Math.toDegrees(correctionHeading)+" CorrectionPower ="+ correctionPower+"\n" +
-                "FinalHeading ="+Math.toDegrees(finalHeading)+" Axial ="+ axial+" Lateral="+ lateral+"\n" +
-                "TargetYaw ="+Math.toDegrees(targetYaw))+" YawPower ="+ yawPower+"\n" +
-                "CycleCondition ="+cycleCondition()+"\n" +
-                "DriveCondition ="+driveCondition()+"\n" +
-                "RotateCondition ="+rotateCondition()+"\n" +
-                "MoveCondition ="+moveCondition()+"\n" +
-                "LockCondition ="+lockCondition();
-    }
-
-
+    /**
+     * Will apply power from the above calulations
+     */
     protected void smartMove() { //Will only move certain areas based on data
         double tempAxial = axial;
         double tempLateral = lateral;
@@ -281,7 +295,13 @@ public class Mover extends Thread {
         movementPower(tempAxial,tempLateral,tempYaw, speed);
     }
 
-    //Set Motor Powers
+    /**
+     * Will convert a vector input to power to the drivetrain
+     * @param axial Forward and backward inout
+     * @param lateral Side to side input
+     * @param yaw Rotational input (clockwise is positive)
+     * @param speed Speed input
+     */
     protected void movementPower(double axial, double lateral, double yaw, double speed) { //Sets the speed for individual motors based on input (Its lying about it always being zero.)
         //Creating Individual Power for Each Motor
         double frontLeftPower  = ((axial + lateral) * speed) + (yaw);

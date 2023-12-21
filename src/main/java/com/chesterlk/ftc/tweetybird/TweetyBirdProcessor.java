@@ -1,124 +1,53 @@
-package com.chesterlk.tweetybird;
+package com.chesterlk.ftc.tweetybird;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-/**
- * The central class for TweetyBird, being responsible for initializing, starting, and stopping TweetyBird, while taking user input
- */
 public class TweetyBirdProcessor {
 
     /**
-     * Allows other TweetyBird threads to determine when to stop
+     * Status Classes
      */
     protected boolean running = false;
 
     /**
-     * Reference to LinearOpMode via builder
+     * Parameters and Configuration
      */
     protected LinearOpMode opMode;
 
-    /**
-     * Front left motor reference via builder
-     */
     protected DcMotor fl;
-    /**
-     * Front right motor reference via builder
-     */
     protected DcMotor fr;
-    /**
-     * Back left motor reference via builder
-     */
     protected DcMotor bl;
-    /**
-     * Back right motor reference via builder
-     */
     protected DcMotor br;
-    /**
-     * Left encoder "motor" reference via builder
-     */
     protected DcMotor le;
-    /**
-     * Right encoder "motor" reference via builder
-     */
     protected DcMotor re;
-    /**
-     * Back encoder "motor" reference via builder
-     */
     protected DcMotor be;
 
-    /**
-     * Radius from center of rotation to left encoder value via builder
-     */
-    protected double radiusToLeftEncoder;
-    /**
-     * Radius from center of rotation to right encoder value via builder
-     */
-    protected double radiusToRightEncoder;
-    /**
-     * Radius from center of rotation to back encoder value via builder
-     */
-    protected double radiusToBackEncoder;
+    protected double inchesBetweenSideEncoders;
+    protected double inchesToBackEncoder;
 
-    /**
-     * Amount of ticks counted per encoder rotation (360 degrees)
-     */
     protected int ticksPerEncoderRotation;
-    /**
-     * Radius of the wheel attached to the encoder
-     */
     protected double encoderWheelRadius;
-
-    /**
-     * Calculated value for ticks per inch moved across a surface (calculated during initialization)
-     */
     protected double ticksPerInch;
+    protected double inchesPerTick;
 
-    /**
-     * Minimum speed via builder
-     */
     protected double minSpeed;
-    /**
-     * Maximum speed via builder
-     */
     protected double maxSpeed;
-    /**
-     * Minimum speed when starting from a standstill via builder
-     */
     protected double startSpeed;
-    /**
-     * Amount of power applied to every wheel when stopped (uses meccanum wheels to push out form the center of rotation)
-     */
     protected double stopForceSpeed;
-    /**
-     * Precise value used to modify acceleration and deceleration (eg. a value of 0.1 will result in 0.2 speed when 2 inches away from target)
-     */
     protected double speedModifier;
 
-    /**
-     * How far (in inches) the robot can be away from its path before directing all power into correcting
-     */
     protected double correctionOverpowerDistance;
-    /**
-     * Amount of degrees the robot can be offset before attempting to correct
-     */
     protected double rotationBuffer;
-    /**
-     * Amount of inches the robot can be offset before attempting to correct
-     */
     protected double distanceBuffer;
 
+    private boolean inputFlipped = false;
+
     /**
-     * Global odometer class reference
+     * Classes
      */
     Odometer odometer;
-    /**
-     * Global queue class reference
-     */
     Queue queue;
-    /**
-     * Global mover class reference
-     */
     Mover mover;
 
 
@@ -129,7 +58,8 @@ public class TweetyBirdProcessor {
      * @param z destination coordinate in inches
      */
     public void straightLineTo(double x, double y, double z) {
-        queue.add(new Waypoint(x,y,Math.toRadians(z)));
+        double modifier = inputFlipped?-1.0:1.0;
+        queue.add(new Waypoint(x*modifier,y,Math.toRadians(z)*modifier));
         while (opMode.opModeIsActive()&&!queue.waypointReceived);
         queue.waypointReceived = false;
     }
@@ -150,16 +80,14 @@ public class TweetyBirdProcessor {
     }
 
     /**
-     * Returns weather if TweetyBird is actively trying to reach its destination, falce once TweetyBird has determined it is close enough
-     * @return boolean
+     * @return true if TweetyBird is currently busy (moving)
      */
     public boolean busy() {
         return mover.busy;
     }
 
     /**
-     * Returns weather TweetyBird is engaged or not (If TweetyBird is allowed to power the motors)
-     * @return boolean of engagement
+     * @return true if TweetyBird is currently engaged (controlling robot)
      */
     public boolean engaged() {
         return mover.engaged;
@@ -189,6 +117,14 @@ public class TweetyBirdProcessor {
         mover.cycleWaypoint();
     }
 
+    /**
+     * If true any inputs made for positioning will be negative of what you input
+     * @param flip true for flip
+     */
+    public void flipInput(boolean flip) {
+        inputFlipped = flip;
+    }
+
 
     /**
      * Builds TweetyBird via the builder method and gets the rest of the classes ready to start
@@ -214,13 +150,13 @@ public class TweetyBirdProcessor {
         this.re = builder.re;
         this.be = builder.be;
 
-        this.radiusToLeftEncoder = builder.radiusToLeftEncoder;
-        this.radiusToRightEncoder = builder.radiusToRightEncoder;
-        this.radiusToBackEncoder = builder.radiusToBackEncoder;
+        this.inchesToBackEncoder = builder.inchesToBackEncoder;
+        this.inchesBetweenSideEncoders = builder.inchesBetweenSideEncoders;
 
         this.ticksPerEncoderRotation = builder.ticksPerEncoderRotation;
         this.encoderWheelRadius = builder.encoderWheelRadius;
         this.ticksPerInch = (double)this.ticksPerEncoderRotation/((double)2*Math.PI*this.encoderWheelRadius);
+        this.inchesPerTick = 2.0*Math.PI*(this.encoderWheelRadius/ticksPerEncoderRotation);
 
         this.minSpeed = builder.minSpeed;
         this.maxSpeed = builder.maxSpeed;
@@ -270,31 +206,28 @@ public class TweetyBirdProcessor {
     }
 
     /**
-     * Returns the X position relative to the point of initialization
-     * @return position
+     * @return X Position
      */
     public double getX() {
         return odometer.X;
     }
 
     /**
-     * Returns the Y position relative to the point of initialization
-     * @return position
+     * @return Y Position
      */
     public double getY() {
         return odometer.Y;
     }
 
     /**
-     * Returns the current yaw relative to the point of initialization
-     * @return degrees
+     * @return Z Position
      */
     public double getZ() {
         return odometer.Z;
     }
 
     /**
-     * Stop all TweetyBird classes
+     * Stop Classes
      */
     public void stop() {
         mover.requestStop();
@@ -398,18 +331,17 @@ public class TweetyBirdProcessor {
         /**
          * Encoder Position Parameters
          */
-        private double radiusToLeftEncoder = 0;
-        private double radiusToRightEncoder = 0;
-        private double radiusToBackEncoder = 0;
+        double inchesBetweenSideEncoders = 0;
+        double inchesToBackEncoder = 0;
 
         /**
          * Distance from the robot's center of rotation to the center of the left encoder wheel.
          * Only 2d, height is not accounted.
          *
-         * @param radius
+         * @param inches
          */
-        public Builder setRadiusToLeftEncoder(double radius) {
-            this.radiusToLeftEncoder = radius;
+        public Builder setInchesBetweenSideEncoders(double inches) {
+            this.inchesBetweenSideEncoders = inches;
             return this;
         }
 
@@ -417,21 +349,10 @@ public class TweetyBirdProcessor {
          * Distance from the robot's center of rotation to the center of the right encoder wheel.
          * Only 2d, height is not accounted.
          *
-         * @param radius
+         * @param inches
          */
-        public Builder setRadiusToRightEncoder(double radius) {
-            this.radiusToRightEncoder = radius;
-            return this;
-        }
-
-        /**
-         * Distance from the robot's center of rotation to the center of the back encoder wheel.
-         * Only 2d, height is not accounted.
-         *
-         * @param radius
-         */
-        public Builder setRadiusToBackEncoder(double radius) {
-            this.radiusToBackEncoder = radius;
+        public Builder setInchesToBackEncoder(double inches) {
+            this.inchesToBackEncoder = inches;
             return this;
         }
 
@@ -571,10 +492,7 @@ public class TweetyBirdProcessor {
         }
 
 
-        /**
-         * Starts TweetyBird with the chosen parameters
-         * @return builder instance
-         */
+
         public TweetyBirdProcessor build() {
             return new TweetyBirdProcessor(this);
         }

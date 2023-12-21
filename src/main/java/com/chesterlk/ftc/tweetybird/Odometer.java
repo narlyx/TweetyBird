@@ -1,26 +1,35 @@
-package com.chesterlk.tweetybird;
+package com.chesterlk.ftc.tweetybird;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+/**
+ * Odometer class, calculates where the robot is currently at
+ */
 public class Odometer extends Thread {
 
     //Processor
     private TweetyBirdProcessor processor;
 
     //Status
+    /**
+     * Variable determining weather the class is running or not
+     */
     protected boolean running = false;
+    /**
+     * Variable determining if the class should stop or not
+     */
     private boolean stopRequested = false;
 
     //Positions (These are stored in the original class, not the thread)
-    protected double X = 0;
-    protected double Y = 0;
-    protected double Z = 0;
+    protected double X = 0.0001;
+    protected double Y = 0.0001;
+    protected double Z = 0.0001;
 
     //Storing variables here for quicker access (These do not need to be static because the class is copied with thread)
-    double Lx;
-    double Rx;
-    double By;
+    double L;
+    double B;
     double ticksPerInch;
+    double inchsPerTick;
 
     public Odometer(TweetyBirdProcessor processor) {
         //Status
@@ -39,10 +48,10 @@ public class Odometer extends Thread {
         Y = 0;
         Z = 0;
 
-        Lx = processor.radiusToLeftEncoder;
-        Rx = processor.radiusToRightEncoder+0.0001;
-        By = processor.radiusToBackEncoder;
+        L = processor.inchesBetweenSideEncoders;
+        B = processor.inchesToBackEncoder;
         ticksPerInch = processor.ticksPerInch;
+        inchsPerTick = processor.inchesPerTick;
 
         //Updating status
         stopRequested = false;
@@ -69,9 +78,9 @@ public class Odometer extends Thread {
         while (processor.opMode.opModeIsActive()||!stopRequested) {
 
             //Getting Encoder Positions
-            int[] rawEncoderPos = {processor.le.getCurrentPosition(),
-                    processor.re.getCurrentPosition(),
-                    processor.be.getCurrentPosition()};
+            int[] rawEncoderPos = {processor.le.getCurrentPosition()*1,
+                    processor.re.getCurrentPosition()*1,
+                    processor.be.getCurrentPosition()*1};
 
             //Getting the Amount Each Encoder Moved Since the Last Cycle
             int[] movedPositions = {rawEncoderPos[0]-prevEncoderPos[0],
@@ -81,26 +90,25 @@ public class Odometer extends Thread {
             //Saving Current Position for Next Run
             prevEncoderPos = rawEncoderPos;
 
-            //Change value names for simplicity whilst converting to ticks to inches
-            double L = movedPositions[0]/ticksPerInch;
-            double R = movedPositions[1]/ticksPerInch;
-            double B = movedPositions[2]/ticksPerInch;
+            //Change value names for simplicity
+            double LE = movedPositions[0];
+            double RE = movedPositions[1];
+            double BE = movedPositions[2];
 
-            //Getting Directions Moved (not counting rotation)
-            double relAxial = ( (L*Rx+R*Lx) / (Lx-Rx) ) / -152500;
-            double theta = ( (R-L) / (Lx-Rx) ) / -152500;
-            double relLateral = (B-By*theta);
+            //General Positioning
+            double preZ = inchsPerTick*((RE-LE)/L);
+            double preY = inchsPerTick*((LE+RE)/2.0);
+            double preX = inchsPerTick*(BE-(RE-LE)*(B/L));
 
-            //Updating Theta as Static First for the Next Equation
-            Z = Z-theta;
+            //Relative Positioning
+            Z += preZ;
+            double theta = Z+(preZ/2.0);
+            double relY = preY*Math.cos(theta)-preX*Math.sin(theta);
+            double relX = preY*Math.sin(theta)+preX*Math.cos(theta);
 
-            //Finally getting the actual axial and lateral
-            double axial = relAxial*Math.cos(Z)-relLateral*Math.sin(Z);
-            double lateral = relLateral*Math.cos(Z)+relAxial*Math.sin(Z);
-
-            //Updating the Rest of the Values as Static
-            X = X+lateral;
-            Y = Y+axial;
+            //Setting Values
+            X -= relX;
+            Y -= relY;
 
         }
     }
