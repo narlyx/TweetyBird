@@ -21,7 +21,11 @@ public class TweetyBirdProcessor {
     protected DcMotor br;
     protected DcMotor le;
     protected DcMotor re;
-    protected DcMotor be;
+    protected DcMotor me;
+
+    protected boolean flipLe;
+    protected boolean flipRe;
+    protected boolean flipMe;
 
     protected double inchesBetweenSideEncoders;
     protected double inchesToBackEncoder;
@@ -62,6 +66,51 @@ public class TweetyBirdProcessor {
         queue.add(new Waypoint(x*modifier,y,Math.toRadians(z)*modifier));
         while (opMode.opModeIsActive()&&!queue.waypointReceived);
         queue.waypointReceived = false;
+    }
+
+    /**
+     * Creates a new line that is adjusted based from the previous input
+     * @param x adjustment in inches
+     * @param y adjustment in inches
+     * @param z adjustment in inches
+     */
+    public void adjustTo(double x, double y, double z) {
+        double modifier = inputFlipped?-1.0:1.0;
+        double currX = getX();
+        double currY = getY();
+        double currZ = getZ();
+        queue.add(new Waypoint(currX+x*modifier,currY+y,currZ+Math.toRadians(z)*modifier));
+        while (opMode.opModeIsActive()&&!queue.waypointReceived);
+        queue.waypointReceived = false;
+    }
+
+    /**
+     * Sets the speed limit
+     * @param speed new speedlimit
+     */
+    public void speedLimit(double speed) {
+        maxSpeed = speed;
+    }
+
+    /**
+     * Will set the current position as 0,0,0
+     */
+    public void resetPosition() {
+        odometer.Xoffset = odometer.X;
+        odometer.Yoffset = odometer.Y;
+        odometer.Zoffset = odometer.Z;
+    }
+
+    /**
+     * Resets position to the input'd values
+     * @param X new X
+     * @param Y new Y
+     * @param Z new Z
+     */
+    public void resetTo(double X, double Y, double Z) {
+        odometer.Xoffset = odometer.X-X;
+        odometer.Yoffset = odometer.Y-Y;
+        odometer.Zoffset = odometer.Z-Z;
     }
 
     /**
@@ -148,7 +197,11 @@ public class TweetyBirdProcessor {
         this.br = builder.br;
         this.le = builder.le;
         this.re = builder.re;
-        this.be = builder.be;
+        this.me = builder.be;
+
+        this.flipLe = builder.flipLe;
+        this.flipRe = builder.flipRe;
+        this.flipMe = builder.flipMe;
 
         this.inchesToBackEncoder = builder.inchesToBackEncoder;
         this.inchesBetweenSideEncoders = builder.inchesBetweenSideEncoders;
@@ -270,6 +323,10 @@ public class TweetyBirdProcessor {
         private DcMotor re = null;
         private DcMotor be = null;
 
+        private boolean flipLe = false;
+        private boolean flipRe = false;
+        private boolean flipMe = false;
+
         /**
          * The instance/variable of the front left motor.
          * @param dcMotor DC Motor instance
@@ -319,11 +376,38 @@ public class TweetyBirdProcessor {
             return this;
         }
         /**
-         * The instance/variable of the back encoder "motor".
+         * The instance/variable of the middle/back/front encoder "motor".
          * @param dcMotor DC Motor instance
          */
-        public Builder setBackEncoder(DcMotor dcMotor) {
+        public Builder setMiddleEncoder(DcMotor dcMotor) {
             this.be = dcMotor;
+            return this;
+        }
+
+        /**
+         * Flips the input of the Left encoder
+         * @param flip yay/nae?
+         */
+        public Builder flipLeftEncoder(Boolean flip) {
+            this.flipLe = flip;
+            return this;
+        }
+
+        /**
+         * Flips the input of the Right encoder
+         * @param flip yay/nae?
+         */
+        public Builder flipRightEncoder(Boolean flip) {
+            this.flipRe = flip;
+            return this;
+        }
+
+        /**
+         * Flips the input of the Middle encoder
+         * @param flip yay/nae?
+         */
+        public Builder flipMiddleEncoder(Boolean flip) {
+            this.flipMe = flip;
             return this;
         }
 

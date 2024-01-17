@@ -25,6 +25,10 @@ public class Odometer extends Thread {
     protected double Y = 0.0001;
     protected double Z = 0.0001;
 
+    protected double Xoffset = 0;
+    protected double Yoffset = 0;
+    protected double Zoffset = 0;
+
     //Storing variables here for quicker access (These do not need to be static because the class is copied with thread)
     double L;
     double B;
@@ -63,12 +67,12 @@ public class Odometer extends Thread {
         //Resting Encoder Positions
         processor.le.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         processor.re.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        processor.be.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        processor.me.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Re-enabling Motors since they are linked to the actual motors
         processor.le.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         processor.re.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        processor.be.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        processor.me.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Storage
         int[] prevEncoderPos = {0,0,0}; //Used to see how far the robot moved
@@ -78,9 +82,9 @@ public class Odometer extends Thread {
         while (processor.opMode.opModeIsActive()||!stopRequested) {
 
             //Getting Encoder Positions
-            int[] rawEncoderPos = {processor.le.getCurrentPosition()*1,
-                    processor.re.getCurrentPosition()*1,
-                    processor.be.getCurrentPosition()*1};
+            int[] rawEncoderPos = {processor.le.getCurrentPosition()*(processor.flipLe?-1:1),
+                    processor.re.getCurrentPosition()*(processor.flipRe?-1:1),
+                    processor.me.getCurrentPosition()*(processor.flipMe?-1:1)};
 
             //Getting the Amount Each Encoder Moved Since the Last Cycle
             int[] movedPositions = {rawEncoderPos[0]-prevEncoderPos[0],
@@ -101,14 +105,14 @@ public class Odometer extends Thread {
             double preX = inchsPerTick*(BE-(RE-LE)*(B/L));
 
             //Relative Positioning
-            Z += preZ;
+            Z += preZ-Zoffset;
             double theta = Z+(preZ/2.0);
             double relY = preY*Math.cos(theta)-preX*Math.sin(theta);
             double relX = preY*Math.sin(theta)+preX*Math.cos(theta);
 
             //Setting Values
-            X -= relX;
-            Y -= relY;
+            X -= relX-Xoffset;
+            Y -= relY-Yoffset;
 
         }
     }
