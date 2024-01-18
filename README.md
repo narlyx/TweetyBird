@@ -34,23 +34,9 @@ Also, contributions of any kind are extreemly helpful. If you improve or fix any
 
 # Installing TweetyBird
 ### Maven repository
-* Navigate to to the teamcode folder of your sdk and edit the build.gradle file (Its under Gradle and the name will be 'build.gradle:teamcode' using Android Studio's default project view 'Android')
-2. Above the the dependancies block add the following
+*Coming Soon, will include a 3 line install and auto updates!*
 
-```
-repositories {
-    maven {
-        name "GithubPackages"
-        url uri("https://maven.pkg.github.com/itschesterlk/TweetyBird")
-    }
-}
-```
-
-* Then inside the of dependancies block add ``implementation 'com.chesterlk:tweetybird:X.X.X'``
-* **REPLACE X.X.X WITH THE CURRENT VERSION CORRESPONDING TO THE GITHUB RELEASES**, eg. ``implementation 'com.chesterlk:tweetybird:2.1.0'``
-
-
-### Manual Method (Currently Reconmended)
+### Manual Method
 1. Download the latest release of TweetyBird's source code from <a href="https://github.com/itschesterlk/TweetyBird/releases">here!</a>, or if you are feeling a little risky and want to be on the bleeding edge, you can download the latest commit.<br><br>
 2. Unzip the source code file and place the extracted file in your FTC Android SDK, this guide will use the root folder of the SDK. Also, keep note of the extracted file's name, you will need it later.<br><br>
 3. Open your TeamCode build.gradle file (/TeamCode/build.gradle) and add the following line to the dependancies block: ```implementation project(path: ':TweetyBirdFileNameHere')``` . TweetyBirdFileNameHere should be replaced with your filename, if you did not modify it, it should go something along the lines of TweetyBird-x.x.x, where the x's represent the release number. (Android studio will autocomplete it for you most of the time)<br><br>
@@ -60,10 +46,10 @@ repositories {
 1. **Importing TweetyBird into the LinearOpMode<br>**
 	Head to any LinearOpMode you would like to use TweetyBird on and add ```import com.chesterlk.ftc.tweetybird.TweetyBirdProcessor;``` to the import section (the top of the file)
 	This will import the TweetyBirdProcessor so that we can interface and use TweetyBird.<br><br>
-2. **Creating TweetyBird variable <br>**
+2. **Creating TweetyBird variable (reconmended)<br>**
 	Before or somewhere inside of your runOpMode add the line ```private TweetyBirdProcessor tweetyBird;```. Ofcource if you need private can be changed for public or whatever, and tweetyBird can be replaced with whatever you want, keep in mind, every time you use TweetyBird that TweetyBird instance, you will need to type it.<br><br>
 3. **Building TweetyBird<br>**
-	TweetyBird used the standardized Builder synctax, and as of current (2.0.0) all paramters available must be used. This is an example configuration, ofcourse change the values to suit your bot. (tweetyBird) is the variable name. If you know how, you can place the following in a seperate class so it does not need to be called in every opmode that uses TweetyBird<br>
+	TweetyBird used the standardized Builder synctax, and as of current (2.0.0) all paramters available must be used. This is an example configuration, ofcourse change the values to suit your bot. (tweetyBird) is the variable name.<br>
 
 	```
 	tweetyBird = new TweetyBirdProcessor.Builder()
