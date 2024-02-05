@@ -9,9 +9,9 @@
 <hr class="dashes">
 
 <h1 align="center">
-	> TWEETYBIRD 2.X.X IS OUT, SEE INSTALLATION <
+	> TWEETYBIRD WILL BE CHANGING <
 	<br>
-	Will break prexisting TweetyBird usages...
+	We are moving our focus from a autonomous movement library, to a general purpose movment tool. This means that instead of ONLY doing autonomous movements, it can be used for much more!
 </h1>
 <br>
 <br>
