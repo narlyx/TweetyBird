@@ -12,7 +12,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 android {
-    namespace 'com.chesterlk.ftc'
+    namespace 'dev.narlyx.ftc'
     compileSdk 33
 
     defaultConfig {
@@ -51,18 +51,18 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/itschesterlk/TweetyBird"
+            url = "https://maven.pkg.github.com/narlyx/TweetyBird"
             credentials {
-                username = project.findProperty("gpr.user") ?: "itschesterlk"
-                password = project.findProperty("gpr.key") ?: "Stoppppp"
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
             }
         }
     }
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'com.chesterlk.ftc'
+            groupId = 'dev.narlyx.ftc'
             artifactId = 'tweetybird'
-            version = '1.2.1'
+            version = '3.0.0'
         }
     }
 }

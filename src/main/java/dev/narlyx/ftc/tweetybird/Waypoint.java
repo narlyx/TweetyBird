@@ -1,4 +1,4 @@
-package com.chesterlk.ftc.tweetybird;
+package dev.narlyx.ftc.tweetybird;
 
 public class Waypoint {
 
