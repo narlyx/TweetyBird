@@ -2,9 +2,9 @@
 
 ![TweetyBirdLogo](https://github.com/narlyx/TweetyBird/assets/109835029/aab1e7b5-45cb-4179-b6c8-14f828e2d562)
 
-![](https://img.shields.io/github/stars/itschesterlk/TweetyBird?color=yellow)
-![](https://img.shields.io/github/release/itschesterlk/TweetyBird?color=yellow)
-![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/itschesterlk/TweetyBird?color=yellow)
+![](https://img.shields.io/github/stars/narlyx/TweetyBird?color=yellow)
+![](https://img.shields.io/github/release/narlyx/TweetyBird?color=yellow)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/narlyx/TweetyBird?color=yellow)
 
 <hr class="dashes">
 

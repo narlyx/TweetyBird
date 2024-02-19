@@ -1,4 +1,4 @@
-package com.chesterlk.ftc.tweetybird;
+package dev.narlyx.ftc.tweetybird;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
