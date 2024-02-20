@@ -254,7 +254,6 @@ public class Mover extends Thread {
 
         double accel = Range.clip(deccel-(processor.queue.getDistanceFromStart()*processor.speedModifier)-processor.startSpeed,0,(processor.maxSpeed-processor.minSpeed));
 
-        //Currently caution is removed "cel)-caution, TB_"
         speed = Range.clip((deccel-accel)-caution,processor.minSpeed,processor.maxSpeed);
     }
 
