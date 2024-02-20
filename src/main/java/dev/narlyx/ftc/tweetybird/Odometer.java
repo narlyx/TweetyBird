@@ -52,8 +52,8 @@ public class Odometer extends Thread {
         Y = 0;
         Z = 0;
 
-        L = processor.inchesBetweenSideEncoders;
-        B = processor.inchesToBackEncoder;
+        L = processor.sideEncoderDistance;
+        B = processor.middleEncoderOffset;
         ticksPerInch = processor.ticksPerInch;
         inchsPerTick = processor.inchesPerTick;
 
