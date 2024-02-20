@@ -239,7 +239,9 @@ public class Mover extends Thread {
     }
 
     private void updateFinal() { //Combines all headings together and makes it robo readable
-        finalHeading = targetHeading+(correctionHeading*(Range.clip(correctionPower/ processor.correctionOverpowerDistance,0,processor.correctionOverpowerDistance)));
+        //TODO: Advanced correction has been temporarily disabled
+        //finalHeading = targetHeading+(correctionHeading*(Range.clip(correctionPower/ processor.correctionOverpowerDistance,0,processor.correctionOverpowerDistance)));
+        finalHeading = targetHeading;
         axial = Math.cos(finalHeading);
         lateral = Math.sin(finalHeading);
     }
