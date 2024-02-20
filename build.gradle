@@ -63,6 +63,7 @@ publishing {
             groupId = 'dev.narlyx.ftc'
             artifactId = 'tweetybird'
             version = '3.0.0'
+            artifact("$buildDir/outputs/aar/TweetyBird-release.aar")
         }
     }
 }
