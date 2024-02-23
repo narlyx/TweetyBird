@@ -2,6 +2,7 @@ package dev.narlyx.ftc.tweetybird;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 public class TweetyBirdProcessor {
 
@@ -27,8 +28,8 @@ public class TweetyBirdProcessor {
     protected boolean flipRe;
     protected boolean flipMe;
 
-    protected double inchesBetweenSideEncoders;
-    protected double inchesToBackEncoder;
+    protected double sideEncoderDistance;
+    protected double middleEncoderOffset;
 
     protected int ticksPerEncoderRotation;
     protected double encoderWheelRadius;
@@ -203,8 +204,8 @@ public class TweetyBirdProcessor {
         this.flipRe = builder.flipRe;
         this.flipMe = builder.flipMe;
 
-        this.inchesToBackEncoder = builder.inchesToBackEncoder;
-        this.inchesBetweenSideEncoders = builder.inchesBetweenSideEncoders;
+        this.middleEncoderOffset = builder.middleEncoderOffset;
+        this.sideEncoderDistance = builder.sideEncoderDistance;
 
         this.ticksPerEncoderRotation = builder.ticksPerEncoderRotation;
         this.encoderWheelRadius = builder.encoderWheelRadius;
@@ -415,8 +416,8 @@ public class TweetyBirdProcessor {
         /**
          * Encoder Position Parameters
          */
-        double inchesBetweenSideEncoders = 0;
-        double inchesToBackEncoder = 0;
+        double sideEncoderDistance = 0;
+        double middleEncoderOffset = 0;
 
         /**
          * Distance from the robot's center of rotation to the center of the left encoder wheel.
@@ -424,19 +425,19 @@ public class TweetyBirdProcessor {
          *
          * @param inches
          */
-        public Builder setInchesBetweenSideEncoders(double inches) {
-            this.inchesBetweenSideEncoders = inches;
+        public Builder setSideEncoderDistance(double inches) {
+            this.sideEncoderDistance = inches;
             return this;
         }
 
         /**
-         * Distance from the robot's center of rotation to the center of the right encoder wheel.
-         * Only 2d, height is not accounted.
+         * Distance from the robot's center of rotation to the middle encoder on the robots Y-axis
+         * (How far forward or backwards the middle encoder is)
          *
          * @param inches
          */
-        public Builder setInchesToBackEncoder(double inches) {
-            this.inchesToBackEncoder = inches;
+        public Builder setMiddleEncoderOffset(double inches) {
+            this.middleEncoderOffset = inches;
             return this;
         }
 
@@ -481,7 +482,7 @@ public class TweetyBirdProcessor {
          * @param speed speed value 0-1
          */
         public Builder setMinSpeed(double speed) {
-            this.minSpeed = speed;
+            this.minSpeed = Range.clip(speed,0,1);
             return this;
         }
 
@@ -491,7 +492,7 @@ public class TweetyBirdProcessor {
          * @param speed speed value 0-1
          */
         public Builder setMaxSpeed(double speed) {
-            this.maxSpeed = speed;
+            this.maxSpeed = Range.clip(speed,0,1);
             return this;
         }
 
@@ -502,7 +503,7 @@ public class TweetyBirdProcessor {
          * @param speed speed value 0-1
          */
         public Builder setStartSpeed(double speed) {
-            this.startSpeed = speed;
+            this.startSpeed = Range.clip(speed,0,1);
             return this;
         }
 
@@ -510,10 +511,12 @@ public class TweetyBirdProcessor {
          * When the robot is at a stand still, how much force will be applied to each motor
          * to attempt to maintain its position, to low will mean no force, too high will skid.
          *
+         * When set to zero, TweetyBird will simply apply a zero hold break.
+         *
          * @param speed speed value 0-1
          */
         public Builder setStopForceSpeed(double speed) {
-            this.stopForceSpeed = speed;
+            this.stopForceSpeed = Range.clip(speed,0,1);
             return this;
         }
 
