@@ -62,7 +62,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId = 'dev.narlyx.ftc'
             artifactId = 'tweetybird'
-            version = '3.0.0'
+            version = '3.0.0.1'
             artifact("$buildDir/outputs/aar/TweetyBird-release.aar")
         }
     }
