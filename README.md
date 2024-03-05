@@ -89,7 +89,7 @@ Whenever you want to update to a newer version, replace the numbers according to
 
 </details>
 
-### Installing TweetyBird Locally
+### Installing TweetyBird Locally (Currently the Easiest Method)
 <details>
 <summary>Click here</summary>
 
