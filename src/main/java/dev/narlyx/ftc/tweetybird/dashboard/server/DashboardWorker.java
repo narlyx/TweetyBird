@@ -1,12 +1,13 @@
-package dev.narlyx.ftc.tweetybird.dashboard;
-
-import android.icu.util.Output;
+package dev.narlyx.ftc.tweetybird.dashboard.server;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * Creates a new thread to send data to a connection
+ */
 public class DashboardWorker extends Thread {
 
     /**

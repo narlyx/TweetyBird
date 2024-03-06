@@ -1,9 +1,12 @@
-package dev.narlyx.ftc.tweetybird.dashboard;
+package dev.narlyx.ftc.tweetybird.dashboard.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Always active and listening for new requests
+ */
 public class DashboardListener extends Thread {
 
     /**
@@ -43,8 +46,8 @@ public class DashboardListener extends Thread {
                 Socket socket = serverSocket.accept();
 
                 //Sending to worker thread
-                DashboardWorker workerThread = new DashboardWorker(socket);
-                workerThread.start();
+                DashboardWorker dashboardWorker = new DashboardWorker(socket);
+                dashboardWorker.start();
 
                 //Note: socket will eventually be closed at the end of the opened thread
             }

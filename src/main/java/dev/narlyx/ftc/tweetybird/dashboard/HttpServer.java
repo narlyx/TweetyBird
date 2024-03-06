@@ -2,10 +2,12 @@ package dev.narlyx.ftc.tweetybird.dashboard;
 
 import java.io.IOException;
 
+import dev.narlyx.ftc.tweetybird.dashboard.server.DashboardListener;
+
 public class HttpServer {
 
     public static void main(String[] args) throws IOException {
-        DashboardListener dashboardListener = new DashboardListener(8080,"tweetybird");
-        dashboardListener.start();
+        DashboardListener listener = new DashboardListener(8080,"tweetybird");
+        listener.start();
     }
 }
