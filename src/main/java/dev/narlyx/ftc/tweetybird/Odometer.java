@@ -21,9 +21,9 @@ public class Odometer extends Thread {
     private boolean stopRequested = false;
 
     //Positions (These are stored in the original class, not the thread)
-    protected double X = 0.0001;
-    protected double Y = 0.0001;
-    protected double Z = 0.0001;
+    private double X = 0.0001;
+    private double Y = 0.0001;
+    private double Z = 0.0001;
 
     protected double Xoffset = 0;
     protected double Yoffset = 0;
@@ -105,16 +105,36 @@ public class Odometer extends Thread {
             double preX = inchsPerTick*(BE-(RE-LE)*(B/L));
 
             //Relative Positioning
-            Z += preZ-Zoffset;
+            Z += preZ;
             double theta = Z+(preZ/2.0);
             double relY = preY*Math.cos(theta)-preX*Math.sin(theta);
             double relX = preY*Math.sin(theta)+preX*Math.cos(theta);
 
             //Setting Values
-            X -= relX-Xoffset;
-            Y -= relY-Yoffset;
+            X -= relX;
+            Y -= relY;
 
         }
+    }
+
+    public double getX() {
+        return X-Xoffset;
+    }
+    public double getY() {
+        return Y-Yoffset;
+    }
+    public double getZ() {
+        return Z-Zoffset;
+    }
+
+    public double getRawX() {
+        return X;
+    }
+    public double getRawY() {
+        return Y;
+    }
+    public double getRawZ() {
+        return Z;
     }
 
     //Stop

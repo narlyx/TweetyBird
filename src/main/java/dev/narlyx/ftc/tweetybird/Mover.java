@@ -131,7 +131,7 @@ public class Mover extends Thread {
     }
 
     private boolean driveCondition() { //True if the robot's x and y pos is correct
-        return distanceForm(targetX, targetY, processor.odometer.X,processor.odometer.Y)<=0.6;
+        return distanceForm(targetX, targetY, processor.odometer.getX(),processor.odometer.getY())<=0.6;
     }
 
     private boolean rotateCondition() { //True is the robot's z pos is correct
@@ -220,19 +220,19 @@ public class Mover extends Thread {
 
     private void updateBisector() { //Creates values for a line from the robot to the closet point on the projection line
         bisectorSlope = (targetX -lastX)/(targetY -lastY);
-        bisectorIntersect = processor.odometer.Y-(-bisectorSlope*processor.odometer.X);
+        bisectorIntersect = processor.odometer.getY()-(-bisectorSlope*processor.odometer.getX());
 
         bisectionX = -((projectionIntersect- bisectorIntersect)/(projectionSlope+ bisectorSlope));
         bisectionY = projectionSlope* bisectionX+ projectionIntersect;
     }
 
     private void updateTarget() { //Updates the heading the robot needs to follow to get to the target
-        targetHeading = Math.atan2(targetX -processor.odometer.X, targetY -processor.odometer.Y)-processor.odometer.Z;
+        targetHeading = Math.atan2(targetX -processor.odometer.getX(), targetY -processor.odometer.getY())-processor.odometer.getZ();
     }
 
     private void updateCorrection() { //Updates the heading the robot needs to follow to get to the closet point on the path
-        correctionHeading = (Math.atan2(bisectionX-processor.odometer.X, bisectionY-processor.odometer.Y+0.0000001)- projectionHeading)-processor.odometer.Z; //Added 0.001 to prevent undefined
-        correctionPower = distanceForm(bisectionX, bisectionY,processor.odometer.X,processor.odometer.Y);
+        correctionHeading = (Math.atan2(bisectionX-processor.odometer.getX(), bisectionY-processor.odometer.getY()+0.0000001)- projectionHeading)-processor.odometer.getZ(); //Added 0.001 to prevent undefined
+        correctionPower = distanceForm(bisectionX, bisectionY,processor.odometer.getX(),processor.odometer.getY());
         if (lastY> targetY) {
             correctionHeading = -correctionHeading;
         }
@@ -266,8 +266,8 @@ public class Mover extends Thread {
     }
 
     private void updateYawPower() {
-        yawOff = Math.abs(targetYaw-processor.odometer.Z);
-        double tempYawPower = Range.clip((targetYaw-processor.odometer.Z)/(Math.PI/5),-1,1);
+        yawOff = Math.abs(targetYaw-processor.odometer.getZ());
+        double tempYawPower = Range.clip((targetYaw-processor.odometer.getZ())/(Math.PI/5),-1,1);
         double multiplier = tempYawPower/Math.abs(tempYawPower);
         tempYawPower = Range.clip(Math.abs(tempYawPower),processor.minSpeed,processor.maxSpeed);
         yawPower = tempYawPower*multiplier;

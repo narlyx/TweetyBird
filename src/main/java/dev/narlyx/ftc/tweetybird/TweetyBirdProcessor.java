@@ -97,9 +97,9 @@ public class TweetyBirdProcessor {
      * Will set the current position as 0,0,0
      */
     public void resetPosition() {
-        odometer.Xoffset = odometer.X;
-        odometer.Yoffset = odometer.Y;
-        odometer.Zoffset = odometer.Z;
+        odometer.Xoffset = odometer.getRawX();
+        odometer.Yoffset = odometer.getRawY();
+        odometer.Zoffset = odometer.getRawZ();
     }
 
     /**
@@ -109,9 +109,9 @@ public class TweetyBirdProcessor {
      * @param Z new Z
      */
     public void resetTo(double X, double Y, double Z) {
-        odometer.Xoffset = odometer.X-X;
-        odometer.Yoffset = odometer.Y-Y;
-        odometer.Zoffset = odometer.Z-Z;
+        odometer.Xoffset = odometer.getRawX()-X;
+        odometer.Yoffset = odometer.getRawY()-Y;
+        odometer.Zoffset = odometer.getRawZ()-Z;
     }
 
     /**
@@ -263,21 +263,21 @@ public class TweetyBirdProcessor {
      * @return X Position
      */
     public double getX() {
-        return odometer.X;
+        return odometer.getX();
     }
 
     /**
      * @return Y Position
      */
     public double getY() {
-        return odometer.Y;
+        return odometer.getY();
     }
 
     /**
      * @return Z Position
      */
     public double getZ() {
-        return odometer.Z;
+        return odometer.getZ();
     }
 
     /**
