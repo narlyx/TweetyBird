@@ -115,3 +115,156 @@ Then we are going to edit the "build.dependancies.gradle" file also within the p
 Now you will need to sync the gradle files and it will build TweetyBird for you, if you are using Android studio, you will have already got the sync gradle files notification multiple times, and you can click sync from there.
 
 <br>
+
+# Setup
+TweetyBird uses the Java builder format to initialize and start TweetyBird.
+
+### Import
+First of all, head the to the class where you want to set up TweetyBird and import the `TweetyBirdProcessor` class, it should be added along with all the other imports and look like this: `import dev.narlyx.ftc.tweetybird.TweetyBirdProcessor;`
+
+### Definition
+Next, its typically good practice to define a TweetyBird variable before we set it, add this line wherever you would like in your class `public TweetyBirdProcessor tweetyBird;`. This can be made public/private/etc based on your use cases.
+
+### Builder
+Next we are going to run the builder class for TweetyBird, this will initialze your configuration and then start TweetyBird.
+
+The basic stucture will look like this
+```
+tweetyBird = new TweetyBirdProcessor.Builder()
+	.exampleConfiguration(1)
+	.exampleConfiguration(2) // The examples are not real options
+	.build();
+```
+it is basically initializing your variable, and then calling the builder method, and once all your confinguration is done, you call the build method/option to start TweetyBird and end the statement.
+
+### Configuration Options
+You can also take at peek at example programs to learn how to setup/use TweetyBird there (coming soon)
+<details>
+<summary>Click to expand</summary>
+
+#### Required Configurations
+<details>
+<summary>setOpMode(LinearOpMode)</summary>
+Pass in your current opmode, see examples if you are unsure
+</details>
+<br>
+<details>
+<summary>setFrontLeftMotor(DCMotor)</summary>
+Pass in your front left motor variable
+</details>
+<br>
+<details>
+<summary>setFrontRightMotor(DCMotor)</summary>
+Pass in your front right motor variable
+</details>
+<br>
+<details>
+<summary>setBackLeftMotor(DCMotor)</summary>
+Pass in your back left motor variable
+</details>
+<br>
+<details>
+<summary>setBackRightMotor(DCMotor)</summary>
+Pass in your back right motor variable
+</details>
+<br>
+<details>
+<summary>setLeftEncoder(DCMotor)</summary>
+Pass in your left encoder "motor" variable
+</details>
+<br>
+<details>
+<summary>setRightEncoder(DCMotor)</summary>
+Pass in your right encoder "motor" variable
+</details>
+<br>
+<details>
+<summary>setMiddleEncoder(DCMotor)</summary>
+Pass in your middle encoder "motor" variable
+</details>
+<br>
+<details>
+<summary>setSideEncoderDistance(double)</summary>
+Distance between the two side encoders in inches
+</details>
+<br>
+<details>
+<summary>setMiddleEncoderOffset(double)</summary>
+Distance in inches of how far forward/backwards the middle encoder is from the two side encoders
+
+Currently this is "backwards", forward offset is negitive, backwards offset is positive, this is subject to change
+</details>
+<br>
+<details>
+<summary>setTicksPerEncoderRotation(double)</summary>
+Ammount of times the encoder will count/tick for a full rotation (look this up for your specific encoder)
+</details>
+<br>
+<details>
+<summary>setEncoderWheelRadius(double)</summary>
+The radius of the wheel attached to your encoder
+</details>
+
+#### Optional Configurations
+<details>
+<summary>flipLeftEncoder(boolean)</summary>
+All encoders must be reading BACKWARDS when moving the bot FORWARD or to the RIGHT
+
+If you are unable to flip the encoder direction though hardware setup then you can flip it here
+</details>
+<br>
+<details>
+<summary>flipRightEncoder(boolean)</summary>
+All encoders must be reading BACKWARDS when moving the bot FORWARD or to the RIGHT
+
+If you are unable to flip the encoder direction though hardware setup then you can flip it here
+</details>
+<br>
+<details>
+<summary>flipMiddleEncoder(boolean)</summary>
+All encoders must be reading BACKWARDS when moving the bot FORWARD or to the RIGHT
+
+If you are unable to flip the encoder direction though hardware setup then you can flip it here
+</details>
+<br>
+<details>
+<summary>setMinSpeed(double)</summary>
+Set the minimum speed TweetyBird can go from 0-1, the default is 0.25
+</details>
+<br>
+<details>
+<summary>setMaxSpeed(double)</summary>
+Set the maximum speed TweetyBird can go from 0-1, the default is 0.8
+</details>
+<br>
+<details>
+<summary>setStartSpeed(double)</summary>
+Set the start speed (minim speed but for starting from a stop) TweetyBird can go from 0-1, the default is 0.4
+</details>
+<br>
+<details>
+<summary>setStopForceSpeed(double)</summary>
+Set the speed used to try and keep the robot in place, the default is 0
+</details>
+<br>
+<details>
+<summary>setSpeedModifier(double)</summary>
+A very fine variabe used to control accelration, only change by tiny ammounts at a time, the default is 0.04
+</details>
+<br>
+<details>
+<summary>setCorrectionOverpowerDistance(double)</summary>
+How far in inches does TweetyBird need to be off from its path to "B-Line" it straight back to its path in inches, the default is 5
+</details>
+<br>
+<details>
+<summary>setDistanceBuffer(double)</summary>
+How far TweetyBird can be off of its target position in inches (to low of a value will cause TweetyBird to rock back and fourth), the default is 1
+</details>
+<br>
+<details>
+<summary>setRotationBuffer(double)</summary>
+How far TweetyBird can be off of its target rotation in degrees (to low of a value will cause TweetyBird to spin back and fourth), the default is 8
+</details>
+<br>
+</details>
