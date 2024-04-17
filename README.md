@@ -119,13 +119,13 @@ Now you will need to sync the gradle files and it will build TweetyBird for you,
 # Setup
 TweetyBird uses the Java builder format to initialize and start TweetyBird.
 
-### Import
+## Import
 First of all, head the to the class where you want to set up TweetyBird and import the `TweetyBirdProcessor` class, it should be added along with all the other imports and look like this: `import dev.narlyx.ftc.tweetybird.TweetyBirdProcessor;`
 
-### Definition
+## Definition
 Next, its typically good practice to define a TweetyBird variable before we set it, add this line wherever you would like in your class `public TweetyBirdProcessor tweetyBird;`. This can be made public/private/etc based on your use cases.
 
-### Builder
+## Builder
 Next we are going to run the builder class for TweetyBird, this will initialze your configuration and then start TweetyBird.
 
 The basic stucture will look like this
@@ -137,7 +137,7 @@ tweetyBird = new TweetyBirdProcessor.Builder()
 ```
 it is basically initializing your variable, and then calling the builder method, and once all your confinguration is done, you call the build method/option to start TweetyBird and end the statement.
 
-### Configuration Options
+## Configuration Options
 You can also take at peek at example programs to learn how to setup/use TweetyBird there (coming soon)
 <details>
 <summary>Click to expand</summary>
@@ -170,17 +170,17 @@ Pass in your back right motor variable
 <br>
 <details>
 <summary>setLeftEncoder(DCMotor)</summary>
-Pass in your left encoder "motor" variable
+Pass in your left encoder "motor" variable, the encoder must be counting to the negatives when the bot is pushed forwards
 </details>
 <br>
 <details>
 <summary>setRightEncoder(DCMotor)</summary>
-Pass in your right encoder "motor" variable
+Pass in your right encoder "motor" variable, the encoder must be counting to the negatives when the bot is pushed forwards
 </details>
 <br>
 <details>
 <summary>setMiddleEncoder(DCMotor)</summary>
-Pass in your middle encoder "motor" variable
+Pass in your middle encoder "motor" variable, the encoder must be counting to the positives when the bot is pushed right
 </details>
 <br>
 <details>
@@ -267,4 +267,21 @@ How far TweetyBird can be off of its target position in inches (to low of a valu
 How far TweetyBird can be off of its target rotation in degrees (to low of a value will cause TweetyBird to spin back and fourth), the default is 8
 </details>
 <br>
+</details>
+
+## General Use
+For demonstrational purposes {tweetyBird} will be used to refrerence your TweetyBird object
+
+<details>
+<summary>Click to expand</summary>
+
+### Starting
+TweetyBird will automaticly start when it is called and built
+
+### Useage
+The basic methods that will be used will be `{{tweetyBird}}.straightLineTo(x,y,z);` is used to move the bot straight to a position realative to the bots starting position based on inches
+
+### Ending
+`{{tweetyBird}}.stop();` must be called when you are done using TweetyBird or an opmode ends, if not, TweetyBird will not sucsessfully launch the second time
+
 </details>
