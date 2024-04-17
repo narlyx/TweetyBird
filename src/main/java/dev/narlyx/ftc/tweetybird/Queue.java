@@ -66,7 +66,7 @@ public class Queue {
 
     protected Waypoint last() { //Returns last waypoint
         if (prevoius.size()==0) {
-            return new Waypoint(processor.odometer.X-0.000001,processor.odometer.Y-0.000001,processor.odometer.Z-0.000001);
+            return new Waypoint(processor.odometer.getX()-0.000001,processor.odometer.getY()-0.000001,processor.odometer.getZ()-0.000001);
         }
         return prevoius.get(0);
     }
@@ -74,12 +74,12 @@ public class Queue {
     protected void clear() { //Clears waypoint list TODO: Currently does not integrate well with TB_Mover
         queue.clear();
         prevoius.clear();
-        silentAdd(new Waypoint(processor.odometer.X,processor.odometer.Y,processor.odometer.Z));
+        silentAdd(new Waypoint(processor.odometer.getX(),processor.odometer.getY(),processor.odometer.getZ()));
         running = true;
     }
 
     protected double getDistanceToCurrent() { //Returns distance between robot to the current waypoint
-        return distanceForm(processor.odometer.X,processor.odometer.Y,current().getX(),current().getY());
+        return distanceForm(processor.odometer.getX(),processor.odometer.getY(),current().getX(),current().getY());
     }
 
     protected double getDistanceToEnd() { //Returns currentDistance + the distance between each waypoint until the end
@@ -91,7 +91,7 @@ public class Queue {
     }
 
     protected double getDistanceFromStart() { //Returns all of the previous waypoints
-        double distance = distanceForm(last().getX(), last().getY(), processor.odometer.X,processor.odometer.Y);
+        double distance = distanceForm(last().getX(), last().getY(), processor.odometer.getX(),processor.odometer.getY());
         for (int i = 1; i<prevoius.size(); i++) {
             distance+=distanceForm(prevoius.get(i-1).getX(),prevoius.get(i-1).getY(),prevoius.get(i).getX(),prevoius.get(i).getY());
         }
