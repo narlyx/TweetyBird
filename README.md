@@ -20,7 +20,7 @@
 <br>
 
 # What is TweetyBird
-TweetyBird is a Android library written in Java targeted at FTC Robotics that takes the hassle out of programming a movement algorithm from scratch. Most FTC teams spend a good chunk of their time just trying to get their robot to move where they want rather than programming what makes their robot unique. TweetyBird is focused on being as simple to use and easy setup as possible while still giving a lot of configuration options to suit any robot, FTC and not.
+TweetyBird is a Android library written in Java targeted at FTC Robotics that takes the hassle out of programming a movement algorithm from scratch. Most FTC teams spend a good chunk of their time just trying to get their robot to move where they want, instead of programming what makes their robot unique. TweetyBird is focused on being as simple and easy to setup as possible while still providing a lot of configuration options to suit any robot, FTC based and non-FTC based.
 
 ### Quick Note
 TweetyBird has recetly been rebuilt and is undergoing many changes, be sure to check back with this readme whenever you update as there are likely to be breaking changes.
