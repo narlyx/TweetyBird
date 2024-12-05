@@ -189,6 +189,13 @@ public class Runtime extends Thread {
     if (onTarget && onRotation) {
       busy = false;
       tweetyBird.driver.stopAndHold();
+      if (tweetyBird.opMode != null) {
+        tweetyBird.opMode.sleep(10);
+      } else {
+        try {
+          wait(10);
+        } catch (InterruptedException e) {}
+      }
       if (!tweetyBird.waypointQueue.getUpdated()) {
         tweetyBird.waypointQueue.clear();
       }

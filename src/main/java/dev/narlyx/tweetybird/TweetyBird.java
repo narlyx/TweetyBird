@@ -72,8 +72,12 @@ public class TweetyBird {
    */
   public void waitWhileBusy() {
     if (opMode != null) {
+      opMode.sleep(10);
       while (isBusy() && opMode.opModeIsActive());
     } else {
+      try {
+        wait(10);
+      } catch (InterruptedException e) {}
       while (isBusy());
     }
   }
