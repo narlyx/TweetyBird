@@ -27,4 +27,5 @@ TweetyBird has recetly been rebuilt and is undergoing many changes, be sure to c
 
 # !! Breaking Change !!
 TweetyBird has been updated to a newer FTC SDK, Gradle, JetBrains Annotation version. The new gradle version is 8.7.0, the new FTC SDK version is 10.1.1, and the new version of the Jebrains Annotation 23.0.0.
+
 For FTC teams: TweetyBird will no longer run on any version of the FtcRobotController SDK prior to 10.1.1, please update to the new FtcRobotController immediately.
