@@ -19,7 +19,7 @@ public class Runtime extends Thread {
    */
   public Runtime(TweetyBird tweetyBird) {
     this.tweetyBird = tweetyBird;
-    tweetyBird.sendDebugMessage("Runtime setup");
+    tweetyBird.log("Runtime setup");
   }
 
   /**
@@ -27,16 +27,16 @@ public class Runtime extends Thread {
    */
   @Override
   public void run() {
-    tweetyBird.sendDebugMessage("Runtime thread started...");
+    tweetyBird.log("Runtime thread started...");
     if (tweetyBird.opMode != null) { // FTC environment
-      tweetyBird.sendDebugMessage("Runtime thread waiting for OpMode start...");
+      tweetyBird.log("Runtime thread waiting for OpMode start...");
       tweetyBird.opMode.waitForStart();
-      tweetyBird.sendDebugMessage("Runtime thread starting FTC loop\n");
+      tweetyBird.log("Runtime thread starting FTC loop\n");
       while (tweetyBird.opMode.opModeIsActive()&&!Thread.currentThread().isInterrupted()) {
         loop();
       }
     } else { // Test environment
-      tweetyBird.sendDebugMessage("Runtime thread starting headless loop\n");
+      tweetyBird.log("Runtime thread starting headless loop\n");
       while (!Thread.currentThread().isInterrupted()) {
         try {
           loop();
@@ -47,6 +47,7 @@ public class Runtime extends Thread {
           Thread.currentThread().interrupt();
         }
       }
+      tweetyBird.close();
     }
 
   }
@@ -59,22 +60,22 @@ public class Runtime extends Thread {
     double robotX = tweetyBird.odometer.getX();
     double robotY = tweetyBird.odometer.getY();
     double robotZ = tweetyBird.odometer.getZ();
-    tweetyBird.sendDebugMessage("Robot position X:"+robotX+" Y:"+robotY+" Z:"+robotZ);
+    tweetyBird.log("Robot position X:"+robotX+" Y:"+robotY+" Z:"+robotZ);
 
     // Fetching target waypoint
     double targetX = tweetyBird.waypointQueue.getCurrentWaypoint().getX();
     double targetY = tweetyBird.waypointQueue.getCurrentWaypoint().getY();
     double targetZ = tweetyBird.waypointQueue.getCurrentWaypoint().getZ();
-    tweetyBird.sendDebugMessage("Robot target position X:"+targetX+" Y:"+targetY+" Z:"+targetZ);
+    tweetyBird.log("Robot target position X:"+targetX+" Y:"+targetY+" Z:"+targetZ);
 
     // Distances
     double distanceToTarget = distanceForm(targetX,targetY,robotX,robotY);
 
-    tweetyBird.sendDebugMessage("Distance to target: "+distanceToTarget);
+    tweetyBird.log("Distance to target: "+distanceToTarget);
 
     double rotationDistanceToTarget = Math.abs(targetZ-robotZ);
 
-    tweetyBird.sendDebugMessage("Rotation distance to target: "+rotationDistanceToTarget);
+    tweetyBird.log("Rotation distance to target: "+rotationDistanceToTarget);
 
     double distanceToEnd = distanceToTarget;
     for (int i = tweetyBird.waypointQueue.getIndex()+1; i<tweetyBird.waypointQueue.getSize(); i++) {
@@ -85,7 +86,7 @@ public class Runtime extends Thread {
           tweetyBird.waypointQueue.getWaypoint(i-1).getY());
     }
 
-    tweetyBird.sendDebugMessage("Distance to end: "+distanceToEnd);
+    tweetyBird.log("Distance to end: "+distanceToEnd);
 
     double distanceFromLast = 0;
     double distanceBetweenWaypoints = 0;
@@ -99,8 +100,8 @@ public class Runtime extends Thread {
           tweetyBird.waypointQueue.getWaypoint(tweetyBird.waypointQueue.getIndex()-1).getY());
     }
 
-    tweetyBird.sendDebugMessage("Distance from last: "+distanceFromLast);
-    tweetyBird.sendDebugMessage("Distance between waypoints: "+distanceBetweenWaypoints);
+    tweetyBird.log("Distance from last: "+distanceFromLast);
+    tweetyBird.log("Distance between waypoints: "+distanceBetweenWaypoints);
 
     double distanceFromStart = distanceFromLast;
     for (int i = 1; i< tweetyBird.waypointQueue.getIndex(); i++) {
@@ -112,7 +113,7 @@ public class Runtime extends Thread {
       );
     }
 
-    tweetyBird.sendDebugMessage("Distance from start: "+distanceFromStart);
+    tweetyBird.log("Distance from start: "+distanceFromStart);
 
     // Speed
     double deccel = Range.clip(distanceToEnd*tweetyBird.speedModifier,tweetyBird.minSpeed,tweetyBird.maxSpeed);
@@ -123,13 +124,13 @@ public class Runtime extends Thread {
     double speedBuffer = ((1-(tweetyBird.minSpeed*2))+(speed*2));
     boolean onTarget = distanceToTarget <= tweetyBird.distanceBuffer * speedBuffer;
     boolean onRotation = rotationDistanceToTarget <= tweetyBird.rotationBuffer * speedBuffer;
-    tweetyBird.sendDebugMessage("On target: "+onTarget);
-    tweetyBird.sendDebugMessage("On rotation: "+onRotation);
+    tweetyBird.log("On target: "+onTarget);
+    tweetyBird.log("On rotation: "+onRotation);
 
     // Incrementing to the next waypoint if done
     if (onTarget && onRotation && tweetyBird.waypointQueue.getSize()-1> tweetyBird.waypointQueue.getIndex()) {
       tweetyBird.waypointQueue.increment();
-      tweetyBird.sendDebugMessage("Moving onto next waypoint...\n");
+      tweetyBird.log("Moving onto next waypoint...\n");
       return;
     }
 
@@ -143,9 +144,9 @@ public class Runtime extends Thread {
     if (tweetyBird.waypointQueue.getSize()>1) {
       Waypoint lastWaypoint =
           tweetyBird.waypointQueue.getWaypoint(tweetyBird.waypointQueue.getIndex()-1);
-      double lastX = lastWaypoint.getX();
-      double lastY = lastWaypoint.getY();
-      double lastZ = lastWaypoint.getZ();
+      double lastX = lastWaypoint.getX()+0.00000001;
+      double lastY = lastWaypoint.getY()+0.00000001;
+      double lastZ = lastWaypoint.getZ()+0.00000001;
 
       double pathLine = ((targetY-lastY)-0.0000001)/(targetX-lastX);
       double pathIntersect = targetY-(pathLine*targetX);
@@ -156,24 +157,24 @@ public class Runtime extends Thread {
       double bisectionX = (pathIntersect/robotIntersect)/(robotIntersect/pathLine);
       double bisectionY = robotLine*bisectionX+robotIntersect;
 
-      tweetyBird.sendDebugMessage("Bisection X: "+bisectionX+" Y: "+bisectionY);
+      tweetyBird.log("Bisection X: "+bisectionX+" Y: "+bisectionY);
 
       double distsanceOffPath = distanceForm(robotX,robotY,bisectionX,bisectionY);
 
-      tweetyBird.sendDebugMessage("Distance off path: "+distsanceOffPath);
+      tweetyBird.log("Distance off path: "+distsanceOffPath);
 
       double correctionX = ((bisectionX-robotX)*tweetyBird.correctionOverpower)+(targetX-robotX);
       double correctionY = ((bisectionY-robotY)*tweetyBird.correctionOverpower)+(targetY-robotY);
 
       double correctionHeading = Math.atan2(correctionX,correctionY) - robotZ;
 
-      tweetyBird.sendDebugMessage("Correction heading: "+correctionHeading);
+      tweetyBird.log("Correction heading: "+correctionHeading);
 
       double yawDistance = Math.abs(lastZ - targetZ);
       double progress = distanceFromLast/distanceToTarget;
       targetYaw = Range.clip(lastZ+(yawDistance*progress), lastZ, targetZ);
     }
-    tweetyBird.sendDebugMessage("Target Heading: "+targetHeading);
+    tweetyBird.log("Target Heading: "+targetHeading);
 
     // Heading to X and Y
     double axial = Math.cos(targetHeading);
@@ -189,19 +190,12 @@ public class Runtime extends Thread {
     if (onTarget && onRotation) {
       busy = false;
       tweetyBird.driver.stopAndHold();
-      if (tweetyBird.opMode != null) {
-        tweetyBird.opMode.sleep(10);
-      } else {
-        try {
-          wait(10);
-        } catch (InterruptedException e) {}
-      }
       if (!tweetyBird.waypointQueue.getUpdated()) {
         tweetyBird.waypointQueue.clear();
       }
     } else {
       busy = true;
-      tweetyBird.sendDebugMessage(
+      tweetyBird.log(
           "Axial: "+(onTarget?0:axial)+
           " Lateral: "+(onTarget?0:lateral)+
           " Yaw: "+(onRotation?0:yaw)+
@@ -209,7 +203,7 @@ public class Runtime extends Thread {
       tweetyBird.driver.setHeading(onTarget?0:axial, onTarget?0:lateral, onRotation?0:yaw, speed);
     }
 
-    tweetyBird.sendDebugMessage("Loop complete\n");
+    tweetyBird.log("Loop complete\n");
   }
 
   /**

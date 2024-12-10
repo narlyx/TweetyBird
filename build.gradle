@@ -4,7 +4,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:7.4.2'
+    classpath 'com.android.tools.build:gradle:8.7.0'
   }
 }
 
@@ -39,9 +39,9 @@ repositories {
 
 dependencies {
   // FTC
-  implementation 'org.firstinspires.ftc:RobotCore:10.1.0'
-  implementation 'org.firstinspires.ftc:Hardware:10.1.0'
+  implementation 'org.firstinspires.ftc:RobotCore:10.1.1'
+  implementation 'org.firstinspires.ftc:Hardware:10.1.1'
   // Other
-  implementation 'org.jetbrains:annotations:15.0'
+  implementation 'org.jetbrains:annotations:23.0.0'
   testImplementation 'junit:junit:4.12'
 }
