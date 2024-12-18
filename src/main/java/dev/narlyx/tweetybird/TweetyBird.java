@@ -1,11 +1,24 @@
 package dev.narlyx.tweetybird;
 
+import android.os.Environment;
+
+import com.qualcomm.robotcore.eventloop.EventLoop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * This is the main class behind TweetyBird, use this class to setup, start, and use TweetyBird.
  */
 public class TweetyBird {
+
+  private static final Logger log = LoggerFactory.getLogger(TweetyBird.class);
 
   /**
    * An interface for TweetyBird to define the structure of a odometer class
@@ -34,10 +47,13 @@ public class TweetyBird {
   protected final WaypointQueue waypointQueue;
   protected final double minSpeed, maxSpeed, distanceBuffer, rotationBuffer;
   protected final double speedModifier, correctionOverpower;
-  protected final boolean debuggingEnabled;
+  protected final boolean debuggingEnabled, loggingEnabled;
 
   // Other classes used by TweetyBird
   protected final Runtime runtime;
+
+  // Log file writer
+  protected BufferedWriter logWriter = null;
 
   /**
    * Creates a new waypoint and adds it to the end of the queue
@@ -60,7 +76,7 @@ public class TweetyBird {
   }
 
   /**
-   * Returns weather the mover is currently in progress or not
+   * Returns whether the mover is currently in progress or not
    * @return Busy
    */
   public boolean isBusy() {
@@ -72,8 +88,12 @@ public class TweetyBird {
    */
   public void waitWhileBusy() {
     if (opMode != null) {
+      opMode.sleep(100);
       while (isBusy() && opMode.opModeIsActive());
     } else {
+      try {
+        wait(100);
+      } catch (InterruptedException e) {}
       while (isBusy());
     }
   }
@@ -82,6 +102,14 @@ public class TweetyBird {
    * Terminates TweetyBird
    */
   public void close() {
+    try {
+      if (logWriter != null) {
+        logWriter.flush();
+        logWriter.close();
+      }
+    } catch (IOException e) {
+      log("Failed to shutdown logWriter");
+    }
     runtime.interrupt();
   }
 
@@ -89,12 +117,24 @@ public class TweetyBird {
    * Internal method used to send debug messages
    * @param message message to be sent
    */
-  protected void sendDebugMessage(String message) {
+  protected void log(String message) {
+    // Processing string
+    String outputString = "[TweetyBird]: "+message;
+
+    // Logfile
+    if (loggingEnabled && logWriter != null) {
+      try {
+        logWriter.write(outputString);
+        logWriter.newLine();
+      } catch (IOException e) {}
+    }
+
+    // Console
     if (debuggingEnabled) {
-      if (opMode == null) {
-        System.out.println("[TweetyBird]: "+message);
-      } else {
-        opMode.telemetry.addLine("[TweetyBird]: "+message);
+      if (opMode == null) { // Normal
+        System.out.println(outputString);
+      } else { // FTC
+        opMode.telemetry.addLine(outputString);
         opMode.telemetry.setAutoClear(false);
         opMode.telemetry.update();
       }
@@ -117,6 +157,7 @@ public class TweetyBird {
     this.distanceBuffer = builder.distanceBuffer;
     this.rotationBuffer = Math.toRadians(builder.rotationBuffer);
     this.debuggingEnabled = builder.debuggingEnabled;
+    this.loggingEnabled = builder.loggingEnabled;
 
     // Setting up queue
     waypointQueue = new WaypointQueue(this);
@@ -125,7 +166,23 @@ public class TweetyBird {
     runtime = new Runtime(this);
     runtime.start();
 
-    sendDebugMessage("Initial setup complete!\n");
+    // Setting up log file
+    String logFileName = "tweetyBirdLog.txt";
+    File logFile;
+    if (opMode != null) {
+      File logDirectory = Environment.getExternalStorageDirectory();
+      logFile = new File(logDirectory, logFileName);
+    } else {
+      logFile = new File(logFileName);
+    }
+    try {
+      logWriter = new BufferedWriter(new FileWriter(logFile, true));
+    } catch (IOException e) {
+      log("Failed to initialize to logWriter "+e);
+    }
+
+    // Done
+    log("Initial setup complete!\n");
   }
 
   /**
@@ -233,11 +290,24 @@ public class TweetyBird {
      * This wil flood your console with debug messages, only use for development
      * and will slow the runtime loop without a linear op mode,
      * the default value is false
-     * @param debuggingEnabled Weather to enable debug logs
+     * @param debuggingEnabled Whether to enable debug logs
      * @return Updated builder
      */
     public Builder setDebuggingEnabled(boolean debuggingEnabled) {
       this.debuggingEnabled = debuggingEnabled;
+      return this;
+    }
+
+    private boolean loggingEnabled = false;
+
+    /**
+     * OPTIONAL
+     * This will print all console and debug logs from TweetyBird to a file
+     * @param loggingEnabled Whether to enable debug logs
+     * @return
+     */
+    public Builder setLoggingEnabled(boolean loggingEnabled) {
+      this.loggingEnabled = loggingEnabled;
       return this;
     }
 

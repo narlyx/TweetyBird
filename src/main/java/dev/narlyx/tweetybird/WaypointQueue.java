@@ -18,9 +18,9 @@ public class WaypointQueue {
    */
   public WaypointQueue(TweetyBird tweetyBird) {
     this.tweetyBird = tweetyBird;
-    tweetyBird.sendDebugMessage("Queue adding placeholder waypoint");
+    tweetyBird.log("Queue adding placeholder waypoint");
     addWaypoint(new Waypoint(0,0,0));
-    tweetyBird.sendDebugMessage("Queue setup");
+    tweetyBird.log("Queue setup");
   }
 
   /**
@@ -30,19 +30,19 @@ public class WaypointQueue {
   public void addWaypoint(Waypoint waypoint) {
     updated = true;
     queue.add(waypoint);
-    tweetyBird.sendDebugMessage("Queue new waypoint added X:"+waypoint.getX()+" Y:"+waypoint.getY()+" Z:"+waypoint.getZ());
+    tweetyBird.log("Queue new waypoint added X:"+waypoint.getX()+" Y:"+waypoint.getY()+" Z:"+waypoint.getZ());
   }
 
   /**
    * Moves on to the next waypoint in queue
    */
   public void increment() {
-    tweetyBird.sendDebugMessage("Queue increment called...");
+    tweetyBird.log("Queue increment called...");
     if (queue.size()>currentIndex+1) {
       currentIndex += 1;
-      tweetyBird.sendDebugMessage("Queue incremented");
+      tweetyBird.log("Queue incremented");
     } else {
-      tweetyBird.sendDebugMessage("Queue not large enough to increment");
+      tweetyBird.log("Queue not large enough to increment");
     }
   }
 
@@ -54,7 +54,7 @@ public class WaypointQueue {
     queue.clear();
     queue.add(currentWaypoint);
     currentIndex = 0;
-    tweetyBird.sendDebugMessage("Queue cleared");
+    tweetyBird.log("Queue cleared");
   }
 
   /**
