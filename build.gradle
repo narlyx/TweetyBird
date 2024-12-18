@@ -8,6 +8,10 @@ buildscript {
   }
 }
 
+plugins {
+  id "com.vanniktech.maven.publish" version "0.30.0"
+  id 'signing'
+}
 apply plugin: 'com.android.library'
 
 android {
@@ -44,4 +48,40 @@ dependencies {
   // Other
   implementation 'org.jetbrains:annotations:23.0.0'
   testImplementation 'junit:junit:4.12'
+}
+
+import com.vanniktech.maven.publish.SonatypeHost
+
+mavenPublishing {
+  publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+  signAllPublications()
+
+  coordinates("dev.narlyx", "tweetybird", "0.1.0")
+
+  pom {
+    name = "TweetyBird"
+    description = "An easy to use java movement algorithm designed for FTC"
+    inceptionYear = "2023"
+    url = "https://github.com/narlyx/tweetybird/"
+    licenses {
+      license {
+        name = "The Apache License, Version 2.0"
+        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+      }
+    }
+    developers {
+      developer {
+        id = "narlyx"
+        name = "Narlyx"
+        url = "https://github.com/narlyx/"
+      }
+    }
+    scm {
+      url = "https://github.com/narlyx/tweetybird/"
+      connection = "scm:git:git://github.com/narlyx/tweetybird.git"
+      developerConnection = "scm:git:ssh://git@github.com/narlyx/tweetybird.git"
+    }
+  }
 }
