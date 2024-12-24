@@ -57,7 +57,7 @@ mavenPublishing {
 
   signAllPublications()
 
-  coordinates("dev.narlyx", "tweetybird", "0.1.0")
+  coordinates("dev.narlyx", "tweetybird", "0.1.1")
 
   pom {
     name = "TweetyBird"

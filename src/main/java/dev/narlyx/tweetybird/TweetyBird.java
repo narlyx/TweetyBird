@@ -152,7 +152,7 @@ public class TweetyBird {
     this.driver = builder.driver;
     this.minSpeed = builder.minSpeed;
     this.maxSpeed = builder.maxSpeed;
-    this.speedModifier = 0.05;
+    this.speedModifier = builder.speedModifier;
     this.correctionOverpower = 5;
     this.distanceBuffer = builder.distanceBuffer;
     this.rotationBuffer = Math.toRadians(builder.rotationBuffer);
@@ -280,6 +280,21 @@ public class TweetyBird {
      */
     public Builder setRotationBuffer(double rotationBuffer) {
       this.rotationBuffer = rotationBuffer;
+      return this;
+    }
+
+    public double speedModifier = 0.05;
+
+    /**
+     * OPTIONAL
+     * This value is used in calculations for acceleration and deceleration internally to determine
+     * when to reach full speed and when to slow down (distance*speedModifier=maxSpeed),
+     * the default value is 0.05.
+     * @param speedModifier New speed modifier
+     * @return Updated builder
+     */
+    public Builder setSpeedModifier(double speedModifier) {
+      this.speedModifier = speedModifier;
       return this;
     }
 
