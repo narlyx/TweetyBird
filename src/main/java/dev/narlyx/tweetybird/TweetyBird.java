@@ -328,7 +328,7 @@ public class TweetyBird {
      * OPTIONAL
      * This will print all console and debug logs from TweetyBird to a file
      * @param loggingEnabled Whether to enable debug logs
-     * @return
+     * @return Updated builder
      */
     public Builder setLoggingEnabled(boolean loggingEnabled) {
       this.loggingEnabled = loggingEnabled;
