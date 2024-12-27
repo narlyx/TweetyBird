@@ -15,6 +15,8 @@
     •
     <a href="https://github.com/narlyx/TweetyBird/wiki/Usage">Usage</a>
     •
+    <a href="https://central.sonatype.com/artifact/dev.narlyx/tweetybird">Maven</a>
+    •
 </div>
 
 <br>
