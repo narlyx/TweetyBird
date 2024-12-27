@@ -9,10 +9,14 @@ buildscript {
 }
 
 plugins {
-  id "com.vanniktech.maven.publish" version "0.30.0"
+  id 'base'
+  id 'com.vanniktech.maven.publish' version '0.30.0'
   id 'signing'
 }
 apply plugin: 'com.android.library'
+
+import com.vanniktech.maven.publish.SonatypeHost
+import groovy.json.JsonSlurper
 
 android {
   namespace 'dev.narlyx.tweetybird'
@@ -21,7 +25,7 @@ android {
   defaultConfig {
     minSdk 24
 
-    consumerProguardFiles "consumer-rules.pro"
+    consumerProguardFiles 'consumer-rules.pro'
   }
 
   buildTypes {
@@ -42,22 +46,33 @@ repositories {
 }
 
 dependencies {
-  // FTC
   implementation 'org.firstinspires.ftc:RobotCore:10.1.1'
   implementation 'org.firstinspires.ftc:Hardware:10.1.1'
-  // Other
   implementation 'org.jetbrains:annotations:23.0.0'
   testImplementation 'junit:junit:4.12'
 }
-
-import com.vanniktech.maven.publish.SonatypeHost
 
 mavenPublishing {
   publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
   signAllPublications()
 
-  coordinates("dev.narlyx", "tweetybird", "0.1.1")
+  def apiUrl = new URL('https://api.github.com/repos/narlyx/tweetybird/releases/latest')
+  def connection = apiUrl.openConnection() as HttpURLConnection
+  connection.requestMethod = 'GET'
+  connection.setRequestProperty('Accept', 'application/vnd.github.v3+json')
+
+  try {
+    if (connection.responseCode == 200) {
+      def releaseInfo = new JsonSlurper().parse(connection.inputStream)
+
+      coordinates("dev.narlyx", "tweetybird", releaseInfo.tag_name.substring(1))
+    } else {
+      throw new GradleException("Failed to fetch remote release. Status: ${connection.responseCode}")
+    }
+  } finally {
+    connection.disconnect()
+  }
 
   pom {
     name = "TweetyBird"
