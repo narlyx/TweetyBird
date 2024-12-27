@@ -38,14 +38,7 @@ public class Runtime extends Thread {
     } else { // Test environment
       tweetyBird.log("Runtime thread starting headless loop\n");
       while (!Thread.currentThread().isInterrupted()) {
-        try {
-          loop();
-          if (tweetyBird.debuggingEnabled) {
-            sleep(500);
-          }
-        } catch (InterruptedException ex) {
-          Thread.currentThread().interrupt();
-        }
+        loop();
       }
       tweetyBird.close();
     }
@@ -79,6 +72,12 @@ public class Runtime extends Thread {
 
     double distanceToEnd = distanceToTarget;
     for (int i = tweetyBird.waypointQueue.getIndex()+1; i<tweetyBird.waypointQueue.getSize(); i++) {
+      if (tweetyBird.opMode != null) {
+        if (!tweetyBird.opMode.opModeIsActive()) {
+          break;
+        }
+      }
+
       distanceToEnd += distanceForm(
           tweetyBird.waypointQueue.getWaypoint(i).getX(),
           tweetyBird.waypointQueue.getWaypoint(i).getY(),
@@ -105,6 +104,12 @@ public class Runtime extends Thread {
 
     double distanceFromStart = distanceFromLast;
     for (int i = 1; i< tweetyBird.waypointQueue.getIndex(); i++) {
+      if (tweetyBird.opMode != null) {
+        if (!tweetyBird.opMode.opModeIsActive()) {
+          break;
+        }
+      }
+
       distanceFromStart += distanceForm(
           tweetyBird.waypointQueue.getWaypoint(i).getX(),
           tweetyBird.waypointQueue.getWaypoint(i).getY(),
@@ -141,7 +146,7 @@ public class Runtime extends Thread {
     double targetYaw = targetZ;
 
     // Advanced heading & yaw
-    if (tweetyBird.waypointQueue.getSize()>1) {
+    if (tweetyBird.waypointQueue.getSize()>1 && tweetyBird.waypointQueue.getIndex()<0) {
       Waypoint lastWaypoint =
           tweetyBird.waypointQueue.getWaypoint(tweetyBird.waypointQueue.getIndex()-1);
       double lastX = lastWaypoint.getX()+0.00000001;

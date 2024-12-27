@@ -7,8 +7,8 @@ import java.util.ArrayList;
  */
 public class WaypointQueue {
   // Cache
-  private TweetyBird tweetyBird;
-  private ArrayList<Waypoint> queue = new ArrayList<>();
+  private final TweetyBird tweetyBird;
+  private final ArrayList<Waypoint> queue = new ArrayList<>();
   private int currentIndex = 0;
   private boolean updated = false;
 
@@ -50,6 +50,7 @@ public class WaypointQueue {
    * Clears out all waypoints accept for the current index
    */
   public void clear() {
+    updated = true;
     Waypoint currentWaypoint = getCurrentWaypoint();
     queue.clear();
     queue.add(currentWaypoint);

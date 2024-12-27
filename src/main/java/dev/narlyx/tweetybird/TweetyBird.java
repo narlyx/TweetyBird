@@ -12,6 +12,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.SimpleFormatter;
 
 /**
  * This is the main class behind TweetyBird, use this class to setup, start, and use TweetyBird.
@@ -102,6 +105,7 @@ public class TweetyBird {
    * Terminates TweetyBird
    */
   public void close() {
+    log("TweetyBird close called, shutting down...");
     try {
       if (logWriter != null) {
         logWriter.flush();
@@ -118,8 +122,13 @@ public class TweetyBird {
    * @param message message to be sent
    */
   protected void log(String message) {
+    // Getting current time
+    Date now = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY hh:mm:ss.SSS");
+    String date = sdf.format(now);
+
     // Processing string
-    String outputString = "[TweetyBird]: "+message;
+    String outputString = "["+date+" TweetyBird]: "+message;
 
     // Logfile
     if (loggingEnabled && logWriter != null) {
@@ -319,7 +328,7 @@ public class TweetyBird {
      * OPTIONAL
      * This will print all console and debug logs from TweetyBird to a file
      * @param loggingEnabled Whether to enable debug logs
-     * @return
+     * @return Updated builder
      */
     public Builder setLoggingEnabled(boolean loggingEnabled) {
       this.loggingEnabled = loggingEnabled;
