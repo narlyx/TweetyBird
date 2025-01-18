@@ -4,6 +4,7 @@ import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.EventLoop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Range;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class TweetyBird {
    * @param speed New maximum speed
    */
   public void setMaxSpeed(double speed) {
-    maxSpeed = speed;
+    maxSpeed = Range.clip(speed, minSpeed, 1);
   }
 
   /**
@@ -92,7 +93,7 @@ public class TweetyBird {
    * @param speed New minimum speed
    */
   public void setMinSpeed(double speed) {
-    minSpeed = speed;
+    minSpeed = Range.clip(speed, 0, maxSpeed);
   }
 
   /**
