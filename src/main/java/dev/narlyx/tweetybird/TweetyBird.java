@@ -48,7 +48,8 @@ public class TweetyBird {
   protected final Odometer odometer;
   protected final Driver driver;
   protected final WaypointQueue waypointQueue;
-  protected final double minSpeed, maxSpeed, distanceBuffer, rotationBuffer;
+  protected final double distanceBuffer, rotationBuffer;
+  protected double minSpeed, maxSpeed;
   protected final double speedModifier, correctionOverpower;
   protected final boolean debuggingEnabled, loggingEnabled;
 
@@ -76,6 +77,22 @@ public class TweetyBird {
    */
   public void resetPosition(double x, double y, double z) {
     odometer.resetTo(x,y,z);
+  }
+
+  /**
+   * Readjusts the maximum speed variable
+   * @param speed New maximum speed
+   */
+  public void setMaxSpeed(double speed) {
+    maxSpeed = speed;
+  }
+
+  /**
+   * Readjusts the minimum speed variable
+   * @param speed New minimum speed
+   */
+  public void setMinSpeed(double speed) {
+    minSpeed = speed;
   }
 
   /**
