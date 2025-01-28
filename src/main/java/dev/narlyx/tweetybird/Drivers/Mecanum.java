@@ -13,6 +13,11 @@ public class Mecanum implements TweetyBird.Driver {
   private final DcMotor frontLeft, frontRight, backLeft, backRight;
 
   /**
+   * Internal variable to track weather the driver is engaged
+   */
+  private boolean engaged = true;
+
+  /**
    * Constructor used to setup all variables from builder.
    * @param builder Passed builder
    */
@@ -24,6 +29,22 @@ public class Mecanum implements TweetyBird.Driver {
   }
 
   /**
+   * Returns weather the driver is engaged or not
+   * @return Engagement status
+   */
+  public boolean getEngaged() {
+    return engaged;
+  }
+
+  /**
+   * Used to control weather the driver has control over the drivetrain
+   * @param engaged New engagement status
+   */
+  public void setEngaged(boolean engaged) {
+    this.engaged = engaged;
+  }
+
+  /**
    * This method will power all four motors based on a target Axial, Lateral, Yaw, and Speed input
    * @param axial Value from -1 to 1 to favor the axial direction
    * @param lateral Value from -1 to 1 to favor the lateral direction
@@ -32,6 +53,9 @@ public class Mecanum implements TweetyBird.Driver {
    */
   @Override
   public void setHeading(double axial, double lateral, double yaw, double speed) {
+    // Exiting if disengaged
+    if (!engaged) { return; }
+
     // Fetching values
     double frontLeftPower  = ((axial + lateral) * speed) + (yaw);
     double frontRightPower = ((axial - lateral) * speed) - (yaw);
@@ -64,6 +88,9 @@ public class Mecanum implements TweetyBird.Driver {
    */
   @Override
   public void stopAndHold() {
+    // Exiting if disengaged
+    if (!engaged) { return; }
+    
     // Stopping motors
     frontLeft.setPower(0);
     frontRight.setPower(0);
