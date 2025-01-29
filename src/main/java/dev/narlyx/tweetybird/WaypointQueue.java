@@ -19,7 +19,7 @@ public class WaypointQueue {
   public WaypointQueue(TweetyBird tweetyBird) {
     this.tweetyBird = tweetyBird;
     tweetyBird.log("Queue adding placeholder waypoint");
-    addWaypoint(new Waypoint(0,0,0));
+    addWaypoint(new Waypoint(tweetyBird.odometer.getX(),tweetyBird.odometer.getY(),tweetyBird.odometer.getZ()));
     tweetyBird.log("Queue setup");
   }
 

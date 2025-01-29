@@ -191,14 +191,14 @@ public class Runtime extends Thread {
     tempYawPower = Range.clip(Math.abs(tempYawPower),tweetyBird.minSpeed,tweetyBird.maxSpeed);
     double yaw = tempYawPower*multiplier;
 
-    // Sending movement
-    if (onTarget && onRotation) {
+    // Output
+    if (onTarget && onRotation) { // Stopping
       busy = false;
       tweetyBird.driver.stopAndHold();
       if (!tweetyBird.waypointQueue.getUpdated()) {
         tweetyBird.waypointQueue.clear();
       }
-    } else {
+    } else { // Sending movement
       busy = true;
       tweetyBird.log(
           "Axial: "+(onTarget?0:axial)+
