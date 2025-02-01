@@ -61,13 +61,24 @@ public class TweetyBird {
   protected BufferedWriter logWriter = null;
 
   /**
-   * Creates a new waypoint and adds it to the end of the queue
-   * @param x New target X
-   * @param y New target Y
-   * @param z New target Z
+   * This method has been renamed, please use addWaypoint(x, y, z) instead
+   * @param x Target X
+   * @param y Target Y
+   * @param z Target Z
    */
+  @Deprecated(since = "0.2.0", forRemoval = false)
   public void sendTargetPosition(double x, double y, double z) {
-    waypointQueue.addWaypoint(new Waypoint(x,y,Math.toRadians(z)));
+    addWaypoint(x, y, z);
+  }
+
+  /**
+   * Creates a new waypoint and adds it to the end of TweetyBird's queue
+   * @param x Target X
+   * @param y Target Y
+   * @param z Target Z
+   */
+  public void addWaypoint(double x, double y, double z) {
+    waypointQueue.addWaypoint(new Waypoint(x, y, Math.toRadians(z)));
   }
 
   /**
