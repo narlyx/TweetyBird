@@ -34,6 +34,17 @@ public class WaypointQueue {
   }
 
   /**
+   * Adds a new waypoint to a specific index in queue
+   * @param index Position in queue
+   * @param waypoint New waypoint to be added
+   */
+  public void addWaypoint(int index, Waypoint waypoint) {
+    updated = true;
+    queue.add(index, waypoint);
+    tweetyBird.log("Queue new waypoint added X:"+waypoint.getX()+" Y:"+waypoint.getY()+" Z:"+waypoint.getZ()+" at index:"+index);
+  }
+
+  /**
    * Moves on to the next waypoint in queue
    */
   public void increment() {

@@ -82,6 +82,16 @@ public class TweetyBird {
   }
 
   /**
+   * Adds a waypoint that will bypass the queue and be run imediently
+   * @param x Target X
+   * @param y Target Y
+   * @param z Target Z
+   */
+  public void injectWaypoint(double x, double y, double z) {
+    waypointQueue.addWaypoint(waypointQueue.getIndex(), new Waypoint(x, y, Math.toRadians(z)));
+  }
+
+  /**
    * Skips the current targeted waypoint
    */
   public void skipWaypoint() {
