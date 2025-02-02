@@ -51,7 +51,11 @@ public class WaypointQueue {
    */
   public void clear() {
     updated = true;
-    Waypoint currentWaypoint = getCurrentWaypoint();
+    //Waypoint currentWaypoint = getCurrentWaypoint();
+    Waypoint currentWaypoint = new Waypoint(
+            tweetyBird.odometer.getX(),
+            tweetyBird.odometer.getY(),
+            tweetyBird.odometer.getZ());
     queue.clear();
     queue.add(currentWaypoint);
     currentIndex = 0;

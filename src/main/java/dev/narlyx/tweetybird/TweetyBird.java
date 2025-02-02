@@ -82,6 +82,24 @@ public class TweetyBird {
   }
 
   /**
+   * Skips the current targeted waypoint
+   */
+  public void skipWaypoint() {
+    if (waypointQueue.getIndex() == waypointQueue.getSize() -1) { // Resetting at end of queue
+      waypointQueue.clear();
+    } else { // Skip next waypoint
+      waypointQueue.increment();
+    }
+  }
+
+  /**
+   * Clears all waypoints in queue
+   */
+  public void clearWaypoints() {
+    waypointQueue.clear();
+   }
+
+  /**
    * Shortcut to reset the position in the provided odometer
    * @param x New x
    * @param y New y
