@@ -12,6 +12,7 @@ public class Runtime extends Thread {
 
   // Cache
   protected boolean busy = false;
+  protected boolean engaged = false;
 
   /**
    * Constructor
@@ -194,18 +195,26 @@ public class Runtime extends Thread {
     // Output
     if (onTarget && onRotation) { // Stopping
       busy = false;
-      tweetyBird.driver.stopAndHold();
+      if (engaged) {
+        tweetyBird.driver.stopAndHold();
+      } else {
+        tweetyBird.log("Driver stop and hold not called: TweetyBird not engaged");
+      }
       if (!tweetyBird.waypointQueue.getUpdated()) {
         tweetyBird.waypointQueue.clear();
       }
     } else { // Sending movement
       busy = true;
-      tweetyBird.log(
-          "Axial: "+(onTarget?0:axial)+
-          " Lateral: "+(onTarget?0:lateral)+
-          " Yaw: "+(onRotation?0:yaw)+
-          " Speed: "+speed);
-      tweetyBird.driver.setHeading(onTarget?0:axial, onTarget?0:lateral, onRotation?0:yaw, speed);
+      if (engaged) {
+        tweetyBird.log(
+                "Axial: " + (onTarget ? 0 : axial) +
+                " Lateral: " + (onTarget ? 0 : lateral) +
+                " Yaw: " + (onRotation ? 0 : yaw) +
+                " Speed: " + speed);
+        tweetyBird.driver.setHeading(onTarget ? 0 : axial, onTarget ? 0 : lateral, onRotation ? 0 : yaw, speed);
+      } else {
+        tweetyBird.log("Driver movement not called: TweetyBird not engaged");
+      }
     }
 
     tweetyBird.log("Loop complete\n");

@@ -159,6 +159,29 @@ public class TweetyBird {
   }
 
   /**
+   * Will allow TweetyBird to send commands to the driver
+   */
+  public void engage() {
+    runtime.engaged = true;
+  }
+
+  /**
+   * Will prevent TweetyBird from sending commands to the driver after setting power to zero
+   */
+  public void disengage() {
+    runtime.engaged = false;
+    driver.setHeading(0,0,0,0);
+  }
+
+  /**
+   * Returns weather TweetyBird is engaged or not
+   * @return Engaged
+   */
+  public boolean isEngaged() {
+    return runtime.engaged;
+  }
+
+  /**
    * Terminates TweetyBird
    */
   public void close() {
