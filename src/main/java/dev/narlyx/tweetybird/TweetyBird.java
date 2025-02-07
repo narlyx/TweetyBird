@@ -107,7 +107,15 @@ public class TweetyBird {
    */
   public void clearWaypoints() {
     waypointQueue.clear();
-   }
+  }
+
+  /**
+   * Function to return the current waypoint
+   * @return Current waypoint
+   */
+  public Waypoint getCurrentWaypoint() {
+    return waypointQueue.getCurrentWaypoint();
+  }
 
   /**
    * Shortcut to reset the position in the provided odometer
