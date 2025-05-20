@@ -53,8 +53,7 @@ public class WaypointQueue {
       currentIndex += 1;
       tweetyBird.log("Queue incremented");
     } else {
-      tweetyBird.log("Clearing Queue - Queue not large enough to increment");
-      clear();
+      tweetyBird.log("Queue not large enough to increment");
     }
   }
 
