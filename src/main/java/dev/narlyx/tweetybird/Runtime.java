@@ -200,6 +200,9 @@ public class Runtime extends Thread {
       } else {
         tweetyBird.log("Driver stop and hold not called: TweetyBird not engaged");
       }
+      if (!tweetyBird.waypointQueue.getUpdated()) {
+        tweetyBird.waypointQueue.clearToCurrentIndex();
+      }
     } else { // Sending movement
       busy = true;
       if (engaged) {
