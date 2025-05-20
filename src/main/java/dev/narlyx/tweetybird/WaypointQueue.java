@@ -75,6 +75,26 @@ public class WaypointQueue {
   }
 
   /**
+   * Clears out waypoints in queue from 0 to current index (inclusive)
+   */
+  public void clearToCurrentIndex(){
+    updated = true;
+    ArrayList<Waypoint> tempQueue = new ArrayList<>();
+    Waypoint currentWaypoint = new Waypoint(
+            tweetyBird.odometer.getX(),
+            tweetyBird.odometer.getY(),
+            tweetyBird.odometer.getZ());
+    for(int i = currentIndex; i < queue.size(); i++){
+      tempQueue.add(getWaypoint(i));
+    }
+    queue.clear();
+    queue.add(currentWaypoint);
+    queue.addAll(tempQueue);
+    currentIndex = 0;
+    tweetyBird.log("Queue cleared up to current index");
+  }
+
+  /**
    * Returns the current index
    * @return Current index
    */
