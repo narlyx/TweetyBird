@@ -52,7 +52,7 @@ dependencies {
   testImplementation 'junit:junit:4.12'
 }
 
-/*
+
 mavenPublishing {
   publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
@@ -101,4 +101,3 @@ mavenPublishing {
     }
   }
 }
-*/
