@@ -129,7 +129,7 @@ public class Runtime extends Thread {
     // Checks
     double speedBuffer = ((1-(tweetyBird.minSpeed*2))+(speed*2));
     boolean onTarget = distanceToTarget <= tweetyBird.distanceBuffer * speedBuffer;
-    boolean onRotation = rotationDistanceToTarget <= tweetyBird.rotationBuffer * speedBuffer;
+    boolean onRotation = rotationDistanceToTarget <= tweetyBird.rotationBuffer * Math.toRadians(speedBuffer);
     tweetyBird.log("On target: "+onTarget);
     tweetyBird.log("On rotation: "+onRotation);
 
